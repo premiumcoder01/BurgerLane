@@ -8,16 +8,12 @@ import {
   StyleSheet,
   BackHandler,
 } from 'react-native';
-// import { withNavigation } from "react-navigation";
-// import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {Colors, Fonts, Sizes} from '../constants/styles';
 import DiscoverScreen from '../screens/discover/discoverScreen';
 import NearByScreen from '../screens/nearBy/nearByScreen';
 import OrderScreen from '../screens/order/orderScreen';
 import FavouritesScreen from '../screens/favourites/favouritesScreen';
-// import ProfileScreen from "../screens/profile/profileScreen";
 import ProfileScreen from '../screens/profile/profileScreen';
-// import { NavigationEvents } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const {height} = Dimensions.get('screen');
@@ -75,10 +71,6 @@ class BottomTabBarScreen extends Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        {/* <NavigationEvents onDidFocus={() => {
-                    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton.bind(this));
-                }} /> */}
-
         {this.state.currentIndex == 1 ? (
           <DiscoverScreen {...this.props} />
         ) : this.state.currentIndex == 2 ? (
@@ -135,7 +127,7 @@ class BottomTabBarScreen extends Component {
   bottomTabBarItem({index, iconName, tag}) {
     return (
       <TouchableOpacity
-        activeOpacity={0.9}
+        activeOpacity={.9}
         onPress={() => this.setState({currentIndex: index})}>
         {this.state.currentIndex == index ? (
           <View style={styles.selectedTabStyle}>
@@ -171,10 +163,10 @@ export default BottomTabBarScreen;
 const styles = StyleSheet.create({
   bottomTabBarStyle: {
     position: 'absolute',
-    bottom: 0.0,
+    bottom:0.0,
     left: 0.0,
     right: 0.0,
-    height: 65.0,
+    height: 60.0,
     backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -203,7 +195,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#FCE0E5',
     paddingHorizontal: Sizes.fixPadding + 5.0,
-    paddingVertical: Sizes.fixPadding + 5.0,
+    paddingVertical: 8,
     borderRadius: Sizes.fixPadding * 4.0,
   },
 });

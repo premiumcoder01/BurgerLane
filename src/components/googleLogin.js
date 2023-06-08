@@ -37,7 +37,6 @@ const googleLogin = () => {
     try {
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       const userInfo = await GoogleSignin.signIn();
-      console.log('user ka info ', userInfo);
       if (userInfo) {
         const {photo, email, name, id} = userInfo.user;
         let obj = {...userInfo.user, socialType: 'GMAIL'};
@@ -96,7 +95,7 @@ const googleLogin = () => {
         if (res.access_token !== undefined) {
           await AsyncStorage.setItem('userDetail', JSON.stringify(res));
           console.log('user login sucessfully');
-          // navigation.push('BottomTabBar');
+          navigation.push('BottomTabBar');
         } else {
           // Toaster(res?.message);
         }

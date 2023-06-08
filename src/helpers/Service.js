@@ -16,7 +16,7 @@ const Post = async (url, data) => {
       },
     })
     .then(res => {
-      console.log('responces user ka ', res.data);
+      // console.log('responces user ka ', res.data);
       return res.data;
     })
     .catch(err => {
@@ -28,8 +28,6 @@ const Post = async (url, data) => {
 const PostGet = async url => {
   const user = await AsyncStorage.getItem('userDetail');
   let userDetail = JSON.parse(user);
-  console.log(`Bearer ${userDetail?.access_token || ''}`);
-  console.log(Constants.baseUrl + url);
   return axios
     .post(Constants.baseUrl + url, {
       headers: {
@@ -38,7 +36,7 @@ const PostGet = async url => {
       },
     })
     .then(res => {
-      console.log('res', res);
+      // console.log('res', res);
       return res.data;
     })
     .catch(err => {
@@ -50,8 +48,6 @@ const PostGet = async url => {
 const GetApi = async (url, data) => {
   const user = await AsyncStorage.getItem('userDetail');
   let userDetail = JSON.parse(user);
-  console.log(Constants.baseUrl + url);
-  console.log(`Bearer ${userDetail?.access_token || ''}`);
   return axios
     .get(Constants.baseUrl + url, {
       data,
