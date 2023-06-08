@@ -1,5 +1,5 @@
 import React from 'react';
-import { Component } from 'react';
+import {Component} from 'react';
 import {
   BackHandler,
   SafeAreaView,
@@ -10,19 +10,17 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-// import { withNavigation } from "react-navigation";
-import { Colors, Fonts, Sizes } from '../../constants/styles';
+import {Colors, Fonts, Sizes} from '../../constants/styles';
 import CollapsingToolbar from '../../components/sliverAppBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import {useState} from 'react';
+import {useEffect} from 'react';
 import Constants from '../../helpers/Constant';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { GetApi, Post, PostGet } from '../../helpers/Service';
-import { Alert } from 'react-native';
-import { ToastAndroid } from 'react-native';
-// import { TransitionPresets } from "react-navigation-stack";
+import {GetApi, Post, PostGet} from '../../helpers/Service';
+import {Alert} from 'react-native';
+import {ToastAndroid} from 'react-native';
 
 class SearchScreen extends Component {
   state = {
@@ -38,7 +36,7 @@ class SearchScreen extends Component {
   }
 
   history = () => {
-    this.setState({ loading: true });
+    this.setState({loading: true});
     Post(Constants.searchTab).then(
       async res => {
         if (res.status === 200) {
@@ -50,17 +48,17 @@ class SearchScreen extends Component {
           // Toaster(res?.message)
         }
 
-        this.setState({ loading: false });
+        this.setState({loading: false});
       },
       err => {
-        this.setState({ loading: false });
+        this.setState({loading: false});
         console.log(err.response.data);
       },
     );
   };
 
   restaurantListCategory = item => {
-    this.setState({ loading: true });
+    this.setState({loading: true});
     const formData = new FormData();
     formData.append('category_id', item.id);
     formData.append('latitude', '28.629341719747938');
@@ -73,17 +71,17 @@ class SearchScreen extends Component {
             item: res,
           });
         }
-        this.setState({ loading: false });
+        this.setState({loading: false});
       },
       err => {
-        this.setState({ loading: false });
+        this.setState({loading: false});
         console.log(err.response.data);
       },
     );
   };
 
   saveHistory = item => {
-    this.setState({ loading: true });
+    this.setState({loading: true});
     const formData = new FormData();
     formData.append('item_id', item?.id);
     formData.append('item_name', item?.name);
@@ -96,32 +94,17 @@ class SearchScreen extends Component {
             restaurant_id: item?.restaurant_id,
           });
         }
-        this.setState({ loading: false });
+        this.setState({loading: false});
       },
       err => {
-        this.setState({ loading: false });
+        this.setState({loading: false});
         console.log(err.response.data);
       },
     );
-
   };
-
-  // componentDidMount() {
-  //     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton.bind(this));
-  // }
-
-  // componentWillUnmount() {
-  //     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton.bind(this));
-  // }
-
-  // handleBackButton = () => {
-  //     this.props.navigation.pop();
-  //     return true;
-  // };
-
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bodyBackColor }}>
+      <SafeAreaView style={{flex: 1, backgroundColor: Colors.bodyBackColor}}>
         <CollapsingToolbar
           element={
             <View style={styles.searchFieldAndExitTextWrapStyle}>
@@ -142,35 +125,35 @@ class SearchScreen extends Component {
                   selectionColor={Colors.primaryColor}
                   placeholderTextColor="#EAB4BE"
                   onChangeText={text => {
-                    this.setState({ search: text });
-                    this.setState({ loading: true });
+                    this.setState({search: text});
+                    this.setState({loading: true});
                     const formData = new FormData();
                     formData.append('search', text);
                     Post(Constants.searchResultAutoComplete, formData).then(
                       async res => {
                         if (res.status === 200) {
                           console.log('text' + JSON.stringify(res?.data));
-                          this.setState({ searchResults: res?.data });
+                          this.setState({searchResults: res?.data});
                         } else {
                           // Toaster(res?.message)
                         }
 
-                        this.setState({ loading: false });
+                        this.setState({loading: false});
                       },
                       err => {
-                        this.setState({ loading: false });
+                        this.setState({loading: false});
                         console.log(err.response.data);
                       },
                     );
                   }}
                 />
               </View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => this.props.navigation.pop()}
-                style={{ flex: 0.22, marginLeft: Sizes.fixPadding }}>
-                <Text style={{ ...Fonts.whiteColor17Regular }}>Exit</Text>
-              </TouchableOpacity>
+                style={{flex: 0.22, marginLeft: Sizes.fixPadding}}>
+                <Text style={{...Fonts.whiteColor17Regular}}>Exit</Text>
+              </TouchableOpacity> */}
             </View>
           }
           toolbarColor={Colors.primaryColor}
@@ -178,7 +161,7 @@ class SearchScreen extends Component {
           toolbarMaxHeight={95}
           isImage={false}
           childrenMinHeight={750}>
-          <View style={{ flex: 1, backgroundColor: Colors.primaryColor }}>
+          <View style={{flex: 1, backgroundColor: Colors.primaryColor}}>
             <View style={styles.pageStyle}>
               {this.historyInfo()}
               {this.suggetionsInfo()}
@@ -191,12 +174,12 @@ class SearchScreen extends Component {
 
   suggetionsInfo() {
     return (
-      <View style={{ marginHorizontal: Sizes.fixPadding }}>
+      <View style={{marginHorizontal: Sizes.fixPadding * 2}}>
         <Text
           style={{
             marginBottom: Sizes.fixPadding + 10.0,
             ...Fonts.blackColor19Medium,
-            zIndex: -999
+            zIndex: -999,
           }}>
           Suggestions
         </Text>
@@ -213,7 +196,7 @@ class SearchScreen extends Component {
                   marginBottom: Sizes.fixPadding * 2.0,
                 }}>
                 <Image
-                  source={{ uri: item.image }}
+                  source={{uri: item.image}}
                   style={{
                     width: 65.0,
                     height: 65.0,
@@ -231,8 +214,8 @@ class SearchScreen extends Component {
             </View>
           ))
         ) : (
-          <View style={{ marginBottom: 20 }}>
-            <Text style={{ ...Fonts.blackColor15Medium }}>
+          <View style={{marginBottom: 20}}>
+            <Text style={{...Fonts.blackColor15Medium}}>
               No Suggestions to Show!
             </Text>
           </View>
@@ -241,14 +224,12 @@ class SearchScreen extends Component {
     );
   }
 
-
-
   historyInfo() {
     return (
       <View
         style={{
           position: 'relative',
-          marginHorizontal: Sizes.fixPadding,
+          marginHorizontal: Sizes.fixPadding * 2,
           marginTop: Sizes.fixPadding * 2.0,
           marginBottom: Sizes.fixPadding + 5.0,
           zIndex: -10,
@@ -260,15 +241,15 @@ class SearchScreen extends Component {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text style={{ ...Fonts.blackColor19Medium }}>History</Text>
+          <Text style={{...Fonts.blackColor19Medium}}>History</Text>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-              this.setState({ loading: true });
+              this.setState({loading: true});
               Post(Constants.searchDeleteAll).then(
                 async res => {
                   if (res.status === 200) {
-                    this.setState({ loading: false });
+                    this.setState({loading: false});
                     ToastAndroid.show(
                       'Search History Deleted Successfully!',
                       ToastAndroid.CENTER,
@@ -283,12 +264,12 @@ class SearchScreen extends Component {
                   });
                 },
                 err => {
-                  this.setState({ loading: false });
+                  this.setState({loading: false});
                   console.log(err.response.data);
                 },
               );
             }}>
-            <Text style={{ ...Fonts.primaryColor16Medium }}>Clear all</Text>
+            <Text style={{...Fonts.primaryColor16Medium}}>Clear all</Text>
           </TouchableOpacity>
         </View>
         {this.state.searchHistory.length !== 0 ? (
@@ -304,20 +285,19 @@ class SearchScreen extends Component {
                   onPress={() => {
                     this.props.navigation.navigate('RestaurantDetail', {
                       restaurant_id: item?.restaurant_id,
-                    })
-                  }}
-                >
-                  <Text style={{ ...Fonts.grayColor16Medium }}>{item.name}</Text>
+                    });
+                  }}>
+                  <Text style={{...Fonts.grayColor16Medium}}>{item.name}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    this.setState({ loading: true });
+                    this.setState({loading: true});
                     const formData = new FormData();
                     formData.append('id', item?.id);
                     Post(Constants.searchDelete, formData).then(
                       async res => {
                         if (res.status === 200) {
-                          this.props.navigation.push('Search')
+                          this.props.navigation.push('Search');
                         } else {
                         }
                         // this.setState({
@@ -326,7 +306,7 @@ class SearchScreen extends Component {
                         // });
                       },
                       err => {
-                        this.setState({ loading: false });
+                        this.setState({loading: false});
                         console.log(err.response.data);
                       },
                     );
@@ -349,14 +329,14 @@ class SearchScreen extends Component {
             </View>
           ))
         ) : (
-          <View style={{ marginBottom: 20 }}>
-            <Text style={{ ...Fonts.blackColor15Medium }}>
+          <View style={{marginBottom: 20}}>
+            <Text style={{...Fonts.blackColor15Medium}}>
               No Search History to Show!
             </Text>
           </View>
         )}
         {this.state.searchHistory.length > 5 && (
-          <Text style={{ ...Fonts.primaryColor16Medium }}>View More</Text>
+          <Text style={{...Fonts.primaryColor16Medium}}>View More</Text>
         )}
         {this.state.search !== '' && (
           <View
@@ -376,15 +356,15 @@ class SearchScreen extends Component {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => this.saveHistory(item)}
-                  style={{ marginBottom: 10, backgroundColor: 'white' }}>
-                  <Text style={{ fontSize: 14, color: 'black' }}>
+                  style={{marginBottom: 10, backgroundColor: 'white'}}>
+                  <Text style={{fontSize: 14, color: 'black'}}>
                     {item?.name}
                   </Text>
                 </TouchableOpacity>
               ))
             ) : (
-              <View style={{ marginBottom: 20 }}>
-                <Text style={{ ...Fonts.blackColor15Medium }}>
+              <View style={{marginBottom: 20}}>
+                <Text style={{...Fonts.blackColor15Medium}}>
                   No Search Results to Show!
                 </Text>
               </View>
@@ -408,8 +388,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.darkPrimaryColor,
-    marginHorizontal: Sizes.fixPadding,
-    paddingVertical: Sizes.fixPadding + 2.0,
+    marginHorizontal: Sizes.fixPadding * 2,
+    // paddingVertical: Sizes.fixPadding + 2.0,
     paddingHorizontal: Sizes.fixPadding,
     borderRadius: Sizes.fixPadding,
     flex: 1,

@@ -1187,7 +1187,7 @@ const styles = StyleSheet.create({
   pageStyle: {
     borderTopLeftRadius: Sizes.fixPadding * 2.0,
     borderTopRightRadius: Sizes.fixPadding * 2.0,
-    backgroundColor: Colors.bodyBackColor,
+    backgroundColor: "#fff",
     flex: 1,
     paddingBottom: Sizes.fixPadding * 7.0,
   },

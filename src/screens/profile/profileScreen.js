@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   Text,
   View,
@@ -11,15 +11,16 @@ import {
   Dimensions,
 } from 'react-native';
 // import { withNavigation } from "react-navigation";
-import { Colors, Fonts, Sizes } from '../../constants/styles';
+import {Colors, Fonts, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Dialog from 'react-native-dialog';
-import { Post } from '../../helpers/Service';
+import {Post} from '../../helpers/Service';
 import Constants from '../../helpers/Constant';
 import Spinner from '../../components/Spinner';
+import data, {paymentAddressAndVoucher} from './data';
 
-const { width } = Dimensions.get('screen');
+const {width} = Dimensions.get('screen');
 
 class ProfileScreen extends Component {
   state = {
@@ -40,10 +41,10 @@ class ProfileScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
+      <SafeAreaView style={{flex: 1, backgroundColor: Colors.whiteColor}}>
         <StatusBar backgroundColor={Colors.primaryColor} />
         <Spinner color={'#fff'} visible={this.state.loading} />
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           {this.header()}
           {this.userInfo()}
           <ScrollView
@@ -65,43 +66,34 @@ class ProfileScreen extends Component {
   paymentAddressAndVoucherSetting() {
     return (
       <View style={styles.paymentAddressAndVoucherSettingWrapStyle}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => this.props.navigation.push('PaymentMethods')}>
-          {this.settings({
-            icon: (
-              <MaterialIcons
-                name="credit-card"
-                size={24}
-                color={Colors.grayColor}
-              />
-            ),
-            setting: 'Payment Methods',
-          })}
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => this.props.navigation.push('Address')}>
-          {this.settings({
-            icon: (
-              <MaterialIcons
-                name="location-on"
-                size={24}
-                color={Colors.grayColor}
-              />
-            ),
-            setting: 'Address',
-          })}
-        </TouchableOpacity>
-        {this.settings({
-          icon: (
-            <MaterialIcons
-              name="local-attraction"
-              size={24}
-              color={Colors.grayColor}
-            />
-          ),
-          setting: 'My Vouchers',
+        {paymentAddressAndVoucher.map((item, index) => {
+          return (
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate(item.title)}>
+              <View style={styles.settingStyle}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <MaterialIcons
+                    name={item.icon}
+                    size={24}
+                    color={Colors.grayColor}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.blackColor15Medium,
+                      marginLeft: Sizes.fixPadding,
+                      width: width / 1.8,
+                    }}>
+                    {item.screen}
+                  </Text>
+                </View>
+                <MaterialIcons
+                  name="arrow-forward-ios"
+                  size={15}
+                  color={Colors.grayColor}
+                />
+              </View>
+            </TouchableOpacity>
+          );
         })}
       </View>
     );
@@ -112,7 +104,7 @@ class ProfileScreen extends Component {
       <Dialog.Container
         visible={this.state.logoutDialog}
         contentStyle={styles.dialogContainerStyle}>
-        <View style={{ backgroundColor: 'white', alignItems: 'center' }}>
+        <View style={{backgroundColor: 'white', alignItems: 'center'}}>
           <Text
             style={{
               ...Fonts.blackColor18Medium,
@@ -123,19 +115,19 @@ class ProfileScreen extends Component {
           <View style={styles.cancelAndLogoutButtonWrapStyle}>
             <TouchableOpacity
               activeOpacity={0.9}
-              onPress={() => this.setState({ logoutDialog: false })}
+              onPress={() => this.setState({logoutDialog: false})}
               style={styles.cancelButtonStyle}>
-              <Text style={{ ...Fonts.blackColor16Medium }}>Cancel</Text>
+              <Text style={{...Fonts.blackColor16Medium}}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={async () => {
-                this.setState({ logoutDialog: false });
+                this.setState({logoutDialog: false});
                 this.props.navigation.push('Login');
                 await AsyncStorage.removeItem('userDetail');
               }}
               style={styles.logOutButtonStyle}>
-              <Text style={{ ...Fonts.whiteColor16Medium }}>Log out</Text>
+              <Text style={{...Fonts.whiteColor16Medium}}>Log out</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -147,9 +139,9 @@ class ProfileScreen extends Component {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() => this.setState({ logoutDialog: true })}
+        onPress={() => this.setState({logoutDialog: true})}
         style={styles.logOutInfoWrapStyle}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <MaterialIcons name="logout" size={24} color={Colors.grayColor} />
           {/* <MaterialCommunityIcons name="login-variant" size={24} color={Colors.grayColor} /> */}
           <Text
@@ -173,84 +165,46 @@ class ProfileScreen extends Component {
   settingsInfo() {
     return (
       <View style={styles.settingInfoWrapStyle}>
-        <TouchableOpacity activeOpacity={0.9}>
-          {this.settings({
-            icon: (
-              <MaterialIcons
-                name="notifications"
-                size={24}
-                color={Colors.grayColor}
-              />
-            ),
-            setting: 'Notifications',
-          })}
-        </TouchableOpacity>
-        {this.settings({
-          icon: (
-            <MaterialIcons name="language" size={24} color={Colors.grayColor} />
-          ),
-          setting: 'Language',
-        })}
-        {this.settings({
-          icon: (
-            <MaterialIcons name="settings" size={24} color={Colors.grayColor} />
-          ),
-          setting: 'Settings',
-        })}
-        {this.settings({
-          icon: (
-            <MaterialIcons
-              name="group-add"
-              size={26}
-              color={Colors.grayColor}
-            />
-          ),
-          setting: 'Invite Friends',
-        })}
-        {this.settings({
-          icon: (
-            <MaterialIcons
-              name="headset-mic"
-              size={22}
-              color={Colors.grayColor}
-            />
-          ),
-          setting: 'Support',
+        {data.map((item, index) => {
+          return (
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate(item.screen)}
+              key={index}>
+              <View style={styles.settingStyle}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <MaterialIcons
+                    name={item.icon}
+                    size={24}
+                    color={Colors.grayColor}
+                  />
+                  <Text
+                    style={{
+                      ...Fonts.blackColor15Medium,
+                      marginLeft: Sizes.fixPadding,
+                      width: width / 1.8,
+                    }}>
+                    {item.screen}
+                  </Text>
+                </View>
+                <MaterialIcons
+                  name="arrow-forward-ios"
+                  size={15}
+                  color={Colors.grayColor}
+                />
+              </View>
+            </TouchableOpacity>
+          );
         })}
       </View>
     );
   }
 
-  settings({ icon, setting }) {
-    return (
-      <TouchableOpacity
-        onPress={() => this.props.navigation.navigate('Notifications')}>
-        <View style={styles.settingStyle}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {icon}
-            <Text
-              style={{
-                ...Fonts.blackColor15Medium,
-                marginLeft: Sizes.fixPadding,
-                width: width / 1.8,
-              }}>
-              {setting}
-            </Text>
-          </View>
-          <MaterialIcons
-            name="arrow-forward-ios"
-            size={15}
-            color={Colors.grayColor}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  }
+ 
 
   editProfileHandler = async () => {
     const user = await AsyncStorage.getItem('userDetail');
     let userDetail = JSON.parse(user);
-    this.setState({ loading: true });
+    this.setState({loading: true});
     const formData1 = new FormData();
 
     formData1.append('user_id', userDetail?.user?.id);
@@ -258,12 +212,12 @@ class ProfileScreen extends Component {
     Post(Constants.getUserProfile, formData1).then(
       async res => {
         if (res.status === 200) {
-          this.setState({ userDetail: res.data });
+          this.setState({userDetail: res.data});
         }
-        this.setState({ loading: false });
+        this.setState({loading: false});
       },
       err => {
-        this.setState({ loading: false });
+        this.setState({loading: false});
         console.log(err.response.data);
       },
     );
@@ -279,13 +233,13 @@ class ProfileScreen extends Component {
           })
         }
         style={styles.userInfoWrapStyle}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
-            source={{ uri: this.state.userDetail?.profile_image }}
+            source={{uri: this.state.userDetail?.profile_image}}
             style={{
               width: 70.0,
               height: 70.0,
-              borderRadius: Sizes.fixPadding - 5.0,
+              borderRadius: 100,
             }}
             resizeMode="cover"
           />
@@ -297,7 +251,7 @@ class ProfileScreen extends Component {
               }}>
               {this.state.userDetail?.name}
             </Text>
-            <Text style={{ ...Fonts.grayColor16Medium }}>
+            <Text style={{...Fonts.grayColor16Medium}}>
               {this.state.userDetail?.phone}
             </Text>
           </View>
