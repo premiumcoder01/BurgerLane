@@ -21,6 +21,7 @@ import {Post} from '../../helpers/Service';
 import Constants from '../../helpers/Constant';
 import Spinner from '../../components/Spinner';
 import {useNavigation} from '@react-navigation/native';
+import Geolocation from '@react-native-community/geolocation';
 
 const {width} = Dimensions.get('screen');
 
@@ -95,15 +96,30 @@ class NearByScreen extends Component {
     this.nearBy();
   }
 
-  nearBy = () => {
+  getLatLong = async () => {
+    return new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(position => {
+        resolve(position.coords);
+      });
+    });
+  };
+
+  nearBy = async () => {
     this.setState({loading: true});
     const formData = new FormData();
+    let lat;
+    let long;
+    await this.getLatLong().then(res => {
+      lat = res.latitude;
+      long = res.longitude;
+    });
 
-    formData.append('lat', '28.629341719747938');
-    formData.append('long', '77.38402881349394');
+    formData.append('lat', lat);
+    formData.append('long', long);
 
     Post(Constants.nearBy, formData).then(
       async res => {
+        console.log("near by category list" ,res)
         if (res.status === 200) {
           this.setState({nearByCategoryList: res?.data?.near_by});
         }
