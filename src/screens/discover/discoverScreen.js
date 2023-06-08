@@ -12,7 +12,6 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-// import { withNavigation } from "react-navigation";
 import {Colors, Fonts, Sizes} from '../../constants/styles';
 import CollapsingToolbar from '../../components/sliverAppBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -28,6 +27,7 @@ const {width} = Dimensions.get('screen');
 const intialAmount = 2.5;
 
 const setDeafultAddress = async (_this, address_id) => {
+  
   _this.setState({loading: true});
   //this.setState({ loading: true });
   console.log(address_id);
@@ -268,8 +268,8 @@ class DiscoverScreen extends Component {
               {this.offerBanners()}
               {this.categoriesInfo()}
               {this.productsOrderedInfo()}
-              {this.favouriteRestaurantsInfo()}
-              {this.allRestaurantsInfo()}
+              {/* {this.favouriteRestaurantsInfo()} */}
+              {/* {this.allRestaurantsInfo()} */}
               {this.allItemsInfo()}
               {/* {this.hotSales()} */}
             </View>
@@ -301,7 +301,9 @@ class DiscoverScreen extends Component {
     return (
       <BottomSheet
         isVisible={this.state.showCustomizeBottomSheet}
-        containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}>
+
+        containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}
+        >
         <TouchableOpacity
           activeOpacity={0.9}
           style={{
@@ -1187,7 +1189,7 @@ const styles = StyleSheet.create({
   pageStyle: {
     borderTopLeftRadius: Sizes.fixPadding * 2.0,
     borderTopRightRadius: Sizes.fixPadding * 2.0,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     flex: 1,
     paddingBottom: Sizes.fixPadding * 7.0,
   },

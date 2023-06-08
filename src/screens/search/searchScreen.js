@@ -356,14 +356,14 @@ class SearchScreen extends Component {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => this.saveHistory(item)}
-                  style={{marginBottom: 10, backgroundColor: 'white'}}>
+                  style={{marginVertical: 10, backgroundColor: 'white'}}>
                   <Text style={{fontSize: 14, color: 'black'}}>
                     {item?.name}
                   </Text>
                 </TouchableOpacity>
               ))
             ) : (
-              <View style={{marginBottom: 20}}>
+              <View style={{marginVertical: 20}}>
                 <Text style={{...Fonts.blackColor15Medium}}>
                   No Search Results to Show!
                 </Text>

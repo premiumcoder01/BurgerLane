@@ -119,7 +119,7 @@ class NearByScreen extends Component {
 
     Post(Constants.nearBy, formData).then(
       async res => {
-        console.log("near by category list" ,res)
+        console.log('near by category list', res);
         if (res.status === 200) {
           this.setState({nearByCategoryList: res?.data?.near_by});
         }
@@ -260,13 +260,30 @@ const TabBarView = ({props, nearByList, loader}) => {
     restaurantByCategory();
   }, [index]);
 
-  const restaurantByCategory = () => {
+  const getLatLong = async () => {
+    return new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(position => {
+        resolve(position.coords);
+      });
+    });
+  };
+
+  const restaurantByCategory = async () => {
     const formData = new FormData();
+
+    let lat;
+    let long;
+    await getLatLong().then(res => {
+      lat = res.latitude;
+      long = res.longitude;
+    });
+
     formData.append('category_id', '1');
-    formData.append('latitude', '28.629341719747938');
-    formData.append('longitude', '77.38402881349394');
+    formData.append('latitude', lat);
+    formData.append('longitude',long);
     Post(Constants.restaurantByCategory, formData).then(
       async res => {
+        console.log(res)
         if (res.status === 200) {
           setFoodLists(res?.data?.restaurants);
         } else {
