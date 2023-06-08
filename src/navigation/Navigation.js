@@ -1,6 +1,6 @@
-import { View, Text } from 'react-native';
+import {View, Text} from 'react-native';
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoadingScreen from '../components/loadingScreen';
 import addNewDeliveryAddressScreen from '../screens/addNewDeliveryAddress/addNewDeliveryAddressScreen';
 import AddDeliveryAddress from '../screens/address/AddDeliveryAddress';
@@ -35,6 +35,11 @@ import CategoryList from '../screens/categoryList/categoryList';
 import OfferListRestaurant from '../screens/offerListRestaurant';
 import popularItems from '../screens/popularItems/popularItems';
 import AddressListScreen from '../screens/address/AddressListScreen';
+import Support from '../screens/Support/Support';
+import Settings from '../screens/Settings/Settings';
+import InviteFriends from '../screens/InviteFriends/InviteFriends';
+import Vouchers from '../screens/Vouchers/Vouchers';
+import Language from '../screens/Language/Language';
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -43,76 +48,76 @@ const Navigation = () => {
       {/* <Stack.Screen name="Loading" component={LoadingScreen} /> */}
       <Stack.Screen
         name="Splash"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={splashScreen}
       />
 
       <Stack.Screen
         name="Onboarding"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={onboardingScreen}
       />
       <Stack.Screen
         name="Login"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={LoginScreen}
       />
       <Stack.Screen
         name="ForgetPassword"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={ForgetPassword}
       />
       <Stack.Screen
         name="ResetPassword"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={ResetPassword}
       />
       <Stack.Screen
         name="Signin"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={signinScreen}
       />
       <Stack.Screen
         name="Register"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={registerScreen}
       />
       <Stack.Screen
         name="Verification"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={verificationScreen}
       />
       <Stack.Screen
         name="BottomTabBar"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={bottomTabBarScreen}
       />
       <Stack.Screen name="Search" component={searchScreen} />
       <Stack.Screen name="RestaurantsList" component={restaurantsListScreen} />
       <Stack.Screen
         name="RestaurantDetail"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={restaurantDetailScreen}
       />
       <Stack.Screen
         name="ConfirmOrder"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={confirmOrderScreen}
       />
       <Stack.Screen name="TrackOrder" component={TrackOrderScreen} />
       <Stack.Screen
         name="OrderInformation"
         component={orderInformationScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="EditProfile"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={EditProfileScreen}
       />
       <Stack.Screen
         name="Profile"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={ProfileScreen}
       />
       <Stack.Screen name="Rating" component={ratingScreen} />
@@ -120,12 +125,12 @@ const Navigation = () => {
       <Stack.Screen name="PaymentMethods" component={paymentMethodsScreen} />
       <Stack.Screen
         name="Address"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={addressScreen}
       />
       <Stack.Screen
         name="Notifications"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={notificationsScreen}
       />
       <Stack.Screen
@@ -135,53 +140,63 @@ const Navigation = () => {
 
       <Stack.Screen
         name="AddDeliveryAddress"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={AddDeliveryAddress}
       />
 
       <Stack.Screen
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         name="EditDeliveryAddress"
         component={EditDeliveryAddress}
       />
 
-      <Stack.Screen options={{ headerShown: false }} name="Discover" component={DiscoverScreen} />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Discover"
+        component={DiscoverScreen}
+      />
       <Stack.Screen
         name="NearBy"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={NearByScreen}
       />
       <Stack.Screen
         name="Order"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={OrderScreen}
       />
       <Stack.Screen
         name="AllProductList"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={AllProductList}
       />
       <Stack.Screen
         name="CategoryList"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={CategoryList}
       />
       <Stack.Screen
         name="OfferList"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={OfferListRestaurant}
       />
       <Stack.Screen
         name="PopularItems"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={popularItems}
       />
       <Stack.Screen
         name="AddressListScreen"
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
         component={AddressListScreen}
       />
       <Stack.Screen name="Favourites" component={FavouritesScreen} />
+      <Stack.Screen name="Support" component={Support} />
+
+      <Stack.Screen name="Language" component={Language} />
+      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="Invite Friends" component={InviteFriends} />
+      <Stack.Screen name="My Vouchers" component={Vouchers} />
     </Stack.Navigator>
   );
 };

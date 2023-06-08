@@ -10,7 +10,6 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-// import { withNavigation } from "react-navigation";
 import {Colors, Fonts, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,7 +18,6 @@ import {Post} from '../../helpers/Service';
 import Constants from '../../helpers/Constant';
 import Spinner from '../../components/Spinner';
 import data, {paymentAddressAndVoucher} from './data';
-
 const {width} = Dimensions.get('screen');
 
 class ProfileScreen extends Component {
