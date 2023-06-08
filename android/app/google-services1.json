@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "247876459223",
+    "project_id": "burgerlane-4fa8d",
+    "storage_bucket": "burgerlane-4fa8d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247876459223:android:85c0771968a8dd854bee92",
+        "android_client_info": {
+          "package_name": "com.burgerlanecustomer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247876459223-j6bj3k1jb1a3sgdaefbg2drlqji3g2m0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2b-rte97Sv2Hes2vevzRpSzkjW43zYO4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247876459223-j6bj3k1jb1a3sgdaefbg2drlqji3g2m0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
