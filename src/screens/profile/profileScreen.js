@@ -197,8 +197,6 @@ class ProfileScreen extends Component {
     );
   }
 
- 
-
   editProfileHandler = async () => {
     const user = await AsyncStorage.getItem('userDetail');
     let userDetail = JSON.parse(user);

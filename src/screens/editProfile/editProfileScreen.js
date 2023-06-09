@@ -259,7 +259,7 @@ const EditProfile = ({navigation, userDetail}) => {
         />
 
         <TouchableOpacity activeOpacity={0.9} onPress={() => updateProfile()}>
-          <Text style={{...Fonts.blueColor17Medium}}>Save</Text>
+          <Text style={{...Fonts.primaryColor16Medium}}>Save</Text>
         </TouchableOpacity>
       </View>
     );
@@ -272,7 +272,7 @@ const EditProfile = ({navigation, userDetail}) => {
           <Image
             source={{uri: fileUri ? fileUri : null}}
             style={styles.profilePhotoStyle}
-            resizeMode="cover"
+            resizeMode="contain"
           />
           <TouchableOpacity
             activeOpacity={0.9}
@@ -688,7 +688,7 @@ const EditProfile = ({navigation, userDetail}) => {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: Colors.bodyBackColor}}>
+    <SafeAreaView style={{flex: 1, backgroundColor:"white"}}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <Spinner color={'#fff'} visible={loading} />
       <View style={{flex: 1}}>
@@ -749,9 +749,9 @@ const styles = StyleSheet.create({
   backArrowAndSaveContainerStyle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginLeft: Sizes.fixPadding * 2.0,
-    marginRight: Sizes.fixPadding,
+    marginHorizontal: 20,
     marginTop: Sizes.fixPadding + 5.0,
+    alignItems: 'center',
   },
   addPhotoContainerStyle: {
     alignItems: 'center',
@@ -769,17 +769,17 @@ const styles = StyleSheet.create({
   profilePhotoWrapStyle: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50.0,
+    marginTop: 20,
     marginBottom: Sizes.fixPadding * 3.0,
   },
   formDataContainerStyle: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderRadius: Sizes.fixPadding - 5.0,
-    height: 65.0,
+    borderRadius: 25,
+    height: 50,
     borderColor: '#F6F6F6',
-    elevation: 1,
+    elevation: 3,
     marginHorizontal: Sizes.fixPadding,
     paddingHorizontal: Sizes.fixPadding * 2.0,
     marginTop: Sizes.fixPadding + 5.0,
@@ -822,17 +822,10 @@ const styles = StyleSheet.create({
   profilePhotoStyle: {
     height: 100.0,
     width: 100.0,
-    borderRadius: Sizes.fixPadding - 5.0,
+    borderRadius: 50,
     borderColor: Colors.whiteColor,
     borderWidth: 2.0,
   },
 });
-
-// EditProfileScreen.navigationOptions = () => {
-//     return {
-//         header: () => null,
-//         ...TransitionPresets.SlideFromRightIOS,
-//     }
-// }
 
 export default EditProfileScreen;

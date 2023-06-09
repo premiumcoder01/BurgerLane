@@ -11,6 +11,7 @@
     "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && gradlew clean && gradlew assembleDebug && cd .."
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^4.4.7",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "@react-native-community/geolocation": "^3.0.5",
     "@react-native-community/masked-view": "^0.1.11",

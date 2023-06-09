@@ -233,7 +233,14 @@ const EditDeliveryAddress = props => {
               submit();
             }
           }}>
-          <Text style={{color: '#fff', fontSize: 15, textAlign: 'center'}}>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 15,
+              textAlign: 'center',
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+            }}>
             Update
           </Text>
         </TouchableOpacity>
@@ -250,23 +257,23 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 15,
     borderRadius: 25,
-    elevation: 2,
-    shadowColor: '#f7f7f7',
+    elevation: 3,
     marginHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 5,
     color: '#000000',
   },
   labelStyle: {
     color: '#000000',
     marginHorizontal: 25,
-    marginBottom: 5,
+    marginTop: 5,
+    fontWeight: 'bold',
   },
   addBtn: {
-    backgroundColor: '#FF69B4',
+    backgroundColor: '#F2647C',
     paddingTop: 12,
     paddingBottom: 15,
-    borderColor: '#9AC96D',
-    borderRadius: 5,
+    borderRadius: 25,
+    elevation: 6,
     margin: 20,
     marginBottom: 50,
   },

@@ -15,6 +15,7 @@ import {
 import {Colors, Fonts, Sizes} from '../../constants/styles';
 import CollapsingToolbar from '../../components/sliverAppBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Snackbar} from 'react-native-paper';
 import {BottomSheet} from 'react-native-elements';
 import {Post} from '../../helpers/Service';
@@ -677,6 +678,7 @@ class DiscoverScreen extends Component {
                 ...Fonts.blackColor14Regular,
                 color: '#CA445D',
                 textAlign: 'right',
+                fontWeight: 'bold',
                 marginHorizontal: 30,
               }}>
               Close
@@ -747,7 +749,7 @@ class DiscoverScreen extends Component {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    marginLeft: 10,
+                    marginHorizontal: 10,
                   }}>
                   <View>
                     <Text style={{...Fonts.blackColor15Medium}}>
@@ -761,7 +763,12 @@ class DiscoverScreen extends Component {
                       {item?.state} ,{item?.pincode}
                     </Text>
                   </View>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginVertical: 10,
+                    }}>
                     <TouchableOpacity
                       onPress={() => {
                         this.setState({showAddressSheet: false});
@@ -770,10 +777,18 @@ class DiscoverScreen extends Component {
                         });
                       }}
                       style={{marginRight: 20}}>
-                      <Text style={{...styles.editAddressStyle}}>Edit</Text>
+                      <FontAwesome5
+                        name="edit"
+                        size={15}
+                        color={Colors.darkPrimaryColor}
+                      />
                     </TouchableOpacity>
                     <TouchableOpacity>
-                      <Text style={{...styles.editAddressStyle}}>Delete</Text>
+                      <MaterialIcons
+                        name="delete"
+                        size={17}
+                        color={Colors.darkPrimaryColor}
+                      />
                     </TouchableOpacity>
                   </View>
                 </View>
