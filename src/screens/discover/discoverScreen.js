@@ -27,7 +27,6 @@ const {width} = Dimensions.get('screen');
 const intialAmount = 2.5;
 
 const setDeafultAddress = async (_this, address_id) => {
-  
   _this.setState({loading: true});
   //this.setState({ loading: true });
   console.log(address_id);
@@ -206,7 +205,9 @@ class DiscoverScreen extends Component {
                 marginLeft: Sizes.fixPadding * 2.0,
                 marginTop: Sizes.fixPadding,
               }}>
-              <Text style={{...Fonts.darkPrimaryColor}}>DELIVERING TO</Text>
+              <Text style={{...Fonts.darkPrimaryColor, color: '#fff'}}>
+                DELIVERING TO
+              </Text>
               <View
                 style={{
                   marginTop: Sizes.fixPadding - 8.0,
@@ -301,9 +302,7 @@ class DiscoverScreen extends Component {
     return (
       <BottomSheet
         isVisible={this.state.showCustomizeBottomSheet}
-
-        containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}
-        >
+        containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}>
         <TouchableOpacity
           activeOpacity={0.9}
           style={{
@@ -669,18 +668,25 @@ class DiscoverScreen extends Component {
           style={{
             backgroundColor: 'white',
             paddingTop: Sizes.fixPadding + 5.0,
+            position: 'relative',
           }}>
           <TouchableOpacity
             onPress={() => this.setState({showAddressSheet: false})}>
-            <Text style={{textAlign: 'center', ...Fonts.blackColor19Medium}}>
-              SELECT ADDRESS
+            <Text
+              style={{
+                ...Fonts.blackColor14Regular,
+                color: '#CA445D',
+                textAlign: 'right',
+                marginHorizontal: 30,
+              }}>
+              Close
             </Text>
           </TouchableOpacity>
           <View
             style={{
               backgroundColor: Colors.grayColor,
               height: 0.3,
-              marginHorizontal: Sizes.fixPadding,
+              marginHorizontal: Sizes.fixPadding * 2,
               marginVertical: Sizes.fixPadding + 5.0,
             }}
           />
@@ -693,17 +699,21 @@ class DiscoverScreen extends Component {
               this.props.navigation.push('AddDeliveryAddress');
             }}
             style={{
-              marginTop: Sizes.fixPadding - 5.0,
-              marginHorizontal: Sizes.fixPadding + 3.0,
-              marginBottom: Sizes.fixPadding + 5.0,
+              margin: 20,
               flexDirection: 'row',
+              justifyContent: 'center',
+              padding: 10,
+              backgroundColor: '#CA445D',
+              marginHorizontal: 30,
+              borderRadius: 25,
               alignItems: 'center',
             }}>
-            <MaterialIcons name="add" color="#2196F3" size={22} />
+            <MaterialIcons name="add" color="#fff" size={22} />
             <Text
               style={{
                 marginLeft: Sizes.fixPadding,
                 ...Fonts.blueColor15Medium,
+                color: '#fff',
               }}>
               Add New Address
             </Text>
@@ -716,50 +726,54 @@ class DiscoverScreen extends Component {
   addresses() {
     return (
       <>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView showsHorizontalScrollIndicator={false}>
           {this.state.userAddressesList.map(item => (
             <TouchableOpacity
-              onPress={() =>
-                // this.setState({
-                //   currentAddress: item.city,
-                //   showAddressSheet: false,
-                // })
-                setDeafultAddress(this, item.id)
-              }
+              onPress={() => setDeafultAddress(this, item.id)}
               style={styles.addresslistStyle}>
               <View
                 style={{
-                  paddingHorizontal: Sizes.fixPadding - 5.0,
-                  paddingBottom: Sizes.fixPadding,
-                  paddingTop: Sizes.fixPadding - 5.0,
+                  padding: Sizes.fixPadding,
+                  flexDirection: 'row',
+                  alignItems: 'flex-start',
                 }}>
+                <MaterialIcons
+                  name="location-on"
+                  size={17}
+                  color={Colors.darkPrimaryColor}
+                />
                 <View
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
+                    marginLeft: 10,
                   }}>
-                  <View style={{height: 120}}>
+                  <View>
                     <Text style={{...Fonts.blackColor15Medium}}>
                       {item?.name}
                     </Text>
-                    <Text style={{...Fonts.blackColor15Medium}}>
+                    <Text style={{...Fonts.blackColor14Regular}}>
                       {item?.phone}
                     </Text>
-                    <Text style={{...Fonts.blackColor15Medium}}>
+                    <Text style={{...Fonts.blackColor14Regular}}>
                       {item?.house_no} ,{item?.area} ,{item?.city} ,
                       {item?.state} ,{item?.pincode}
                     </Text>
                   </View>
-                  <View>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TouchableOpacity
                       onPress={() => {
                         this.setState({showAddressSheet: false});
                         this.props.navigation.push('EditDeliveryAddress', {
                           addressId: item.id,
                         });
-                      }}>
+                      }}
+                      style={{marginRight: 20}}>
                       <Text style={{...styles.editAddressStyle}}>Edit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                      <Text style={{...styles.editAddressStyle}}>Delete</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -991,11 +1005,15 @@ class DiscoverScreen extends Component {
         </View>
         <FlatList
           data={this.state.itemList}
+          numColumns={2}
+          columnWrapperStyle={{
+            justifyContent: 'space-between',
+            paddingHorizontal: 20,
+          }}
           keyExtractor={item => `${item.id}`}
           renderItem={renderItem}
           contentContainerStyle={{
             paddingTop: Sizes.fixPadding,
-            paddingBottom: Sizes.fixPadding * 3.0,
           }}
           showsHorizontalScrollIndicator={false}
         />
@@ -1246,11 +1264,9 @@ const styles = StyleSheet.create({
   allRestaurentsInfoWrapStyle: {
     backgroundColor: Colors.whiteColor,
     borderRadius: Sizes.fixPadding - 5.0,
-    //width: 130.0,
-    marginHorizontal: 20,
+    width: 150,
     marginBottom: 20,
     elevation: 5,
-    // marginRight: Sizes.fixPadding + 2.0,
   },
   favouriteRestaurentImageStyle: {
     width: '100%',
@@ -1259,10 +1275,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: Sizes.fixPadding - 5.0,
   },
   allRestaurentImageStyle: {
-    //width: 130.0,
-    height: 180.0,
-    borderTopLeftRadius: Sizes.fixPadding - 5.0,
-    borderTopRightRadius: Sizes.fixPadding - 5.0,
+    height: 150,
+    resizeMode: 'contain',
+    borderTopLeftRadius: Sizes.fixPadding,
+    borderTopRightRadius: Sizes.fixPadding,
   },
   hotSalesInfoWrapStyle: {
     backgroundColor: Colors.whiteColor,
@@ -1271,10 +1287,11 @@ const styles = StyleSheet.create({
     marginRight: Sizes.fixPadding + 2.0,
   },
   addresslistStyle: {
-    backgroundColor: Colors.grayColor,
-    borderRadius: Sizes.fixPadding - 5.0,
-    width: 130.0,
-    marginRight: Sizes.fixPadding + 2.0,
+    backgroundColor: 'white',
+    borderRadius: Sizes.fixPadding,
+    elevation: 4,
+    marginBottom: 10,
+    marginHorizontal: Sizes.fixPadding + 20,
   },
   hotSaleImageStyle: {
     width: 130.0,
@@ -1357,7 +1374,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editAddressStyle: {
-    color: '#fff',
+    color: '#F2647C',
+    marginVertical: 10,
   },
 });
 

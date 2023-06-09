@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -11,10 +11,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 // import { withNavigation } from "react-navigation";
-import { Colors, Fonts, Sizes } from '../../constants/styles';
+import {Colors, Fonts, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 // import { TransitionPresets } from 'react-navigation-stack';
-import MapView, { Marker, ProviderPropType } from 'react-native-maps';
+import MapView, {Marker, ProviderPropType} from 'react-native-maps';
 
 const LATITUDE = 28.629341719747938;
 const LONGITUDE = 77.38402881349394;
@@ -64,14 +64,14 @@ class AddNewDeliveryAddressScreen extends Component {
 
   onPoiClick(e) {
     const poi = e.nativeEvent;
-    this.setState({ poi });
+    this.setState({poi});
   }
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
+      <SafeAreaView style={{flex: 1, backgroundColor: Colors.whiteColor}}>
         <StatusBar backgroundColor={Colors.primaryColor} />
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           {/* {this.header()} */}
           {this.map()}
           {this.addressInfo()}
@@ -113,7 +113,7 @@ class AddNewDeliveryAddressScreen extends Component {
           activeOpacity={0.9}
           onPress={() => this.props.navigation.pop()}
           style={styles.addNewAddressButtonStyle}>
-          <Text style={{ ...Fonts.whiteColor16Medium }}>Add new Address</Text>
+          <Text style={{...Fonts.whiteColor16Medium}}>Add new Address</Text>
         </TouchableOpacity>
       </View>
     );
@@ -123,14 +123,14 @@ class AddNewDeliveryAddressScreen extends Component {
     return (
       <MapView
         provider={this.props.provider}
-        style={{ width: '100%', height: '100%' }}
+        style={{width: '100%', height: '100%'}}
         initialRegion={this.state.region}
         onPoiClick={this.onPoiClick}>
         {this.state.poi == null ? (
           <Marker coordinate={defaultMarker}>
             <Image
               source={require('../../../assets/images/custom_marker.png')}
-              style={{ width: 30.0, height: 30.0 }}
+              style={{width: 30.0, height: 30.0}}
             />
           </Marker>
         ) : null}
@@ -138,7 +138,7 @@ class AddNewDeliveryAddressScreen extends Component {
           <Marker coordinate={this.state.poi.coordinate}>
             <Image
               source={require('../../../assets/images/custom_marker.png')}
-              style={{ width: 30.0, height: 30.0 }}
+              style={{width: 30.0, height: 30.0}}
             />
           </Marker>
         )}
@@ -154,7 +154,7 @@ class AddNewDeliveryAddressScreen extends Component {
           size={24}
           color={Colors.blackColor}
           onPress={() => this.props.navigation.pop()}
-          style={{ position: 'absolute', left: 20.0 }}
+          style={{position: 'absolute', left: 20.0}}
         />
         <Text
           style={{
