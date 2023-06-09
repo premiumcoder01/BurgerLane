@@ -80,7 +80,6 @@ class BottomTabBarScreen extends Component {
         ) : this.state.currentIndex == 4 ? (
           <FavouritesScreen {...this.props} />
         ) : (
-          // this.props.navigation.navigate()
           <ProfileScreen {...this.props} />
         )}
 
@@ -152,11 +151,7 @@ class BottomTabBarScreen extends Component {
   }
 }
 
-// BottomTabBarScreen.navigationOptions = () => {
-//     return {
-//         header: () => null
-//     }
-// }
+
 
 export default BottomTabBarScreen;
 

@@ -1,7 +1,5 @@
-import {View, Text} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoadingScreen from '../components/loadingScreen';
 import addNewDeliveryAddressScreen from '../screens/addNewDeliveryAddress/addNewDeliveryAddressScreen';
 import AddDeliveryAddress from '../screens/address/AddDeliveryAddress';
 import EditDeliveryAddress from '../screens/address/EditDeliveryAddress';
