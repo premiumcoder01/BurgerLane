@@ -45,7 +45,6 @@ const Stack = createNativeStackNavigator();
 const Navigation = () => {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen name="Loading" component={LoadingScreen} /> */}
       <Stack.Screen
         name="Splash"
         options={{headerShown: false}}

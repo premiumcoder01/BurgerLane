@@ -11,9 +11,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-// import { withNavigation } from "react-navigation";
 import {Colors, Fonts, Sizes} from '../../constants/styles';
-// import { TransitionPresets } from "react-navigation-stack";
 import CollapsingToolbar from '../../components/sliverAppBar';
 import {Snackbar} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
