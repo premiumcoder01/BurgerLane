@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Modal, ActivityIndicator, StyleSheet} from 'react-native';
+import Lottie from 'lottie-react-native';
 
 const Spinner = spinnerProp => {
   return (
@@ -11,7 +12,12 @@ const Spinner = spinnerProp => {
       onRequestClose={() => {}}>
       <View style={Styles.modalBackground}>
         <View style={Styles.activityIndicatorWrapper}>
-          <ActivityIndicator color={spinnerProp.color} size="large" />
+          <ActivityIndicator color="#F2647C" size="large" />
+          {/* <Lottie
+            source={require('../../assets/images/loader.json')}
+            autoPlay
+            loop
+          /> */}
         </View>
       </View>
     </Modal>

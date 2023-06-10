@@ -38,6 +38,7 @@ import Settings from '../screens/Settings/Settings';
 import InviteFriends from '../screens/InviteFriends/InviteFriends';
 import Vouchers from '../screens/Vouchers/Vouchers';
 import Language from '../screens/Language/Language';
+import BottomTab from '../components/BottomTab';
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -87,7 +88,7 @@ const Navigation = () => {
       <Stack.Screen
         name="BottomTabBar"
         options={{headerShown: false}}
-        component={bottomTabBarScreen}
+        component={BottomTab}
       />
       <Stack.Screen name="Search" component={searchScreen} />
       <Stack.Screen name="RestaurantsList" component={restaurantsListScreen} />
