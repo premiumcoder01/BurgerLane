@@ -23,6 +23,7 @@ const Discover = () => {
   const [loading, setLoading] = useState(false);
   const [currentAddress, setCurrentAddress] = useState('');
   const [offerList, setOfferList] = useState([]);
+  const [itemList, setItemList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
 
   const getLatLong = async () => {
@@ -43,21 +44,49 @@ const Discover = () => {
     const formData = new FormData();
     formData.append('lat', lat);
     formData.append('long', long);
+    setLoading(true);
     Post(Constants.home, formData).then(async res => {
       if (res.status === 200) {
+        setItemList(res?.data?.item_list?.data);
         setCurrentAddress(res?.data?.current_location);
         setCategoryList(res?.data?.categories?.data);
+        setLoading(false);
       }
     });
   };
-
-  console.log(categoryList);
 
   const OfferList = () => {
     Post(Constants.offerList).then(
       async res => {
         if (res.status === 200) {
           setOfferList(res?.data?.restaurant);
+        }
+      },
+      err => {
+        console.log(err.response.data);
+      },
+    );
+  };
+
+
+  const restaurantListCategory = async item => {
+    let lat;
+    let long;
+    await getLatLong().then(res => {
+      lat = res.latitude;
+      long = res.longitude;
+    });
+
+    const formData = new FormData();
+    formData.append('category_id', item.id);
+    formData.append('latitude', lat);
+    formData.append('longitude', long);
+    Post(Constants.restaurantByCategory, formData).then(
+      async res => {
+        if (res.status === 200) {
+          navigation.navigate('CategoryList', {
+            item: res,
+          });
         }
       },
       err => {
@@ -124,93 +153,154 @@ const Discover = () => {
           onPress={() => navigation.navigate('Notifications')}
         />
       </View>
-      <ScrollView contentContainerStyle={{flex: 1}}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={() => navigation.navigate('Search')}
-          style={styles.searchInfoWrapStyle}>
-          <MaterialIcons name="search" size={22} color={Colors.whiteColor} />
-          <Text
-            style={{
-              marginLeft: Sizes.fixPadding,
-              ...Fonts.lightPrimaryColor16Regular,
-            }}>
-            Do you want find something?
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.pageStyle}>
-          {/* banner */}
-          <View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {offerList.map(item => {
-                return (
-                  <TouchableOpacity
-                    style={{marginHorizontal: 20}}
-                    onPress={() =>
-                      navigation.navigate('OfferList', {id: item?.id})
-                    }>
-                    <Image
-                      source={{uri: item.image}}
-                      style={styles.offerBannersImageStyle}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-          {/* category */}
-          <View>
+      <View style={{flex: 1}}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flexGrow: 1}}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('Search')}
+            style={styles.searchInfoWrapStyle}>
+            <MaterialIcons name="search" size={22} color={Colors.whiteColor} />
             <Text
               style={{
-                ...Fonts.blackColor19Medium,
-                marginHorizontal: Sizes.fixPadding + 10,
-                marginVertical: Sizes.fixPadding + 10,
+                marginLeft: Sizes.fixPadding,
+                ...Fonts.lightPrimaryColor16Regular,
               }}>
-              Categories
+              Do you want find something?
             </Text>
-            {categoryList.map(item => {
-              return (
-                <View
-                  style={{
-                    alignItems: 'center',
-                    marginRight: Sizes.fixPadding * 2.0,
-                  }}>
-                  <TouchableOpacity
-                    // onPress={() => this.restaurantListCategory(item)}
-                    >
-                    <Image
-                      source={{
-                        uri: item?.image,
-                      }}
-                      style={{width: 60, height: 60, borderRadius: 50}}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      marginTop: Sizes.fixPadding,
-                      ...Fonts.blackColor14Regular,
-                    }}>
-                    {item?.name}
-                  </Text>
-                </View>
-              );
-            })}
-            {/* <FlatList
-              horizontal
-              data={this.state.categoriesList}
-              keyExtractor={item => `${item.id}`}
-              renderItem={renderItem}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingLeft: Sizes.fixPadding + 10,
-                paddingBottom: Sizes.fixPadding * 3.0,
-                paddingTop: Sizes.fixPadding,
-              }}
-            /> */}
+          </TouchableOpacity>
+          <View style={styles.pageStyle}>
+            {/* banner */}
+            <View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {offerList.map(item => {
+                  return (
+                    <TouchableOpacity
+                      style={{marginHorizontal: 20}}
+                      onPress={() =>
+                        navigation.navigate('OfferList', {id: item?.id})
+                      }>
+                      <Image
+                        source={{uri: item.image}}
+                        style={styles.offerBannersImageStyle}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
+            {/* category */}
+            <View>
+              <Text
+                style={{
+                  ...Fonts.blackColor19Medium,
+                  marginHorizontal: Sizes.fixPadding + 10,
+                  marginVertical: Sizes.fixPadding + 10,
+                }}>
+                Categories
+              </Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingLeft: Sizes.fixPadding + 10,
+                  paddingBottom: Sizes.fixPadding * 3.0,
+                  // paddingTop: Sizes.fixPadding,
+                }}>
+                {categoryList.map(item => {
+                  return (
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        marginRight: Sizes.fixPadding * 2.0,
+                      }}>
+                      <TouchableOpacity
+                        onPress={() => restaurantListCategory(item)}>
+                        <Image
+                          source={{
+                            uri: item?.image,
+                          }}
+                          style={{width: 60, height: 60, borderRadius: 50}}
+                          resizeMode="contain"
+                        />
+                      </TouchableOpacity>
+                      <Text
+                        style={{
+                          marginTop: Sizes.fixPadding,
+                          ...Fonts.blackColor14Regular,
+                        }}>
+                        {item?.name}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </ScrollView>
+            </View>
+            {/* All Items */}
+            <View>
+              <View
+                style={{
+                  marginHorizontal: Sizes.fixPadding + 10,
+                  marginBottom: 10,
+                }}>
+                <Text style={{...Fonts.blackColor19Medium}}>All Items</Text>
+              </View>
+              <FlatList
+                data={itemList}
+                numColumns={2}
+                columnWrapperStyle={{
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 20,
+                }}
+                keyExtractor={item => `${item.id}`}
+                contentContainerStyle={{
+                  paddingTop: Sizes.fixPadding,
+                }}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({item}) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate('RestaurantDetail', {
+                          details: item.item,
+                          from: 'ProductList',
+                          restaurant_id: item.restaurant_id,
+                        })
+                      }
+                      style={styles.allRestaurentsInfoWrapStyle}>
+                      <Image
+                        source={{uri: item?.image}}
+                        style={styles.allRestaurentImageStyle}
+                      />
+                      <View
+                        style={{
+                          paddingHorizontal: Sizes.fixPadding - 5.0,
+                          paddingBottom: Sizes.fixPadding,
+                          paddingTop: Sizes.fixPadding - 5.0,
+                        }}>
+                        <Text
+                          numberOfLines={1}
+                          style={{...Fonts.blackColor15Medium}}>
+                          {item?.name}
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            marginTop: Sizes.fixPadding - 7.0,
+                            ...Fonts.grayColor14Medium,
+                          }}>
+                          Price : {item?.price}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -236,12 +326,25 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderTopLeftRadius: Sizes.fixPadding * 2.0,
     borderTopRightRadius: Sizes.fixPadding * 2.0,
-    paddingBottom: Sizes.fixPadding * 7.0,
+    // paddingBottom: Sizes.fixPadding * 120,
   },
   offerBannersImageStyle: {
     width: width / 1.15,
     height: 160,
     borderWidth: 2,
     borderRadius: Sizes.fixPadding * 2,
+  },
+  allRestaurentsInfoWrapStyle: {
+    backgroundColor: Colors.whiteColor,
+    borderRadius: Sizes.fixPadding - 5.0,
+    width: 150,
+    marginBottom: 20,
+    elevation: 5,
+  },
+  allRestaurentImageStyle: {
+    height: 150,
+    resizeMode: 'contain',
+    borderTopLeftRadius: Sizes.fixPadding,
+    borderTopRightRadius: Sizes.fixPadding,
   },
 });

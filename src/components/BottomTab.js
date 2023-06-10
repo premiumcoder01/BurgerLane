@@ -37,8 +37,8 @@ const BottomTab = () => {
       />
       <Tabs.Screen
         name="Near By"
-        // component={NearByScreen}
-        component={DiscoverScreen}
+        component={NearByScreen}
+        // component={DiscoverScreen}
         options={{
           tabBarIcon: ({focused, color, size}) => (
             <MaterialIcons
