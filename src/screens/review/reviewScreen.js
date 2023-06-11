@@ -142,7 +142,7 @@ const Review = props => {
   function ratingInfo() {
     return (
       <View style={styles.ratingInfoWrapStyle}>
-        <Text style={{...Fonts.blackColor19Medium}}>Rate</Text>
+        <Text style={{...Fonts.blackColor19Medium}}>Rating</Text>
         <View
           style={{
             marginRight: Sizes.fixPadding,
@@ -253,7 +253,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: Sizes.fixPadding + 5.0,
     marginBottom: Sizes.fixPadding,
-    marginLeft: Sizes.fixPadding * 4.0,
+    // marginLeft: Sizes.fixPadding * 4.0,
+    marginHorizontal: 20,
   },
 });
 

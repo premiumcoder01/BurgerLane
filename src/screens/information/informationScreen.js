@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
-import { Colors, Sizes, Fonts } from '../../constants/styles';
+import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {Colors, Sizes, Fonts} from '../../constants/styles';
 import HTMLView from 'react-native-htmlview';
 
-const { width } = Dimensions.get('screen');
+const {width} = Dimensions.get('screen');
 const htmlStyles = StyleSheet.create({
   // p: {
   //   color: '#000'
@@ -11,7 +11,7 @@ const htmlStyles = StyleSheet.create({
   // h: {
   //   color: '#000'
   // },
-})
+});
 const Information = props => {
   return <View style={styles.pageStyle}>{informationInfo()}</View>;
 
@@ -20,7 +20,7 @@ const Information = props => {
       <>
         <View
           style={{
-            marginHorizontal: Sizes.fixPadding,
+            marginHorizontal: Sizes.fixPadding *2,
             marginTop: Sizes.fixPadding,
             marginBottom: Sizes.fixPadding * 2.0,
           }}>
@@ -35,7 +35,7 @@ const Information = props => {
             {props?.restaurantDetails?.description}
           </Text> */}
           <HTMLView
-            textComponentProps={{ style: { color: 'black' } }}
+            textComponentProps={{style: {color: 'black'}}}
             value={props?.restaurantDetails?.description}></HTMLView>
         </View>
         <Image

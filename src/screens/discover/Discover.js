@@ -97,7 +97,6 @@ const Discover = () => {
     // formData.append('longitude', '77.38402881349394');
     Post(Constants.restaurantByCategory, formData).then(
       async res => {
-        console.log(res.data.restaurants)
         if (res.status === 200) {
           navigation.navigate('CategoryList', {
             item: res,

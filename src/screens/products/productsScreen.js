@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   ScrollView,
@@ -9,12 +9,12 @@ import {
   FlatList,
   Image,
 } from 'react-native';
-import { Fonts, Colors, Sizes } from '../../constants/styles';
+import {Fonts, Colors, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { BottomSheet } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import {BottomSheet} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 import Constants from '../../helpers/Constant';
-import { Post } from '../../helpers/Service';
+import {Post} from '../../helpers/Service';
 import Spinner from '../../components/Spinner';
 
 const juiceList = [
@@ -115,7 +115,7 @@ const optionsList = [
   },
 ];
 const fruits = [];
-const Products = ({ props, popularItemList, productList, restroId }) => {
+const Products = ({props, popularItemList, productList, restroId}) => {
   const [sizeIndex, setSizeIndex] = useState(null);
   const [productAddOnId, setProductAddOnId] = useState(null);
   const [productAddOnListId, setProductAddOnListId] = useState(null);
@@ -131,7 +131,6 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
   const [showBottomSheet, setShowBottomSheet] = useState(false);
 
   const [popularItems, setPopularItems] = useState(popularItemList);
-
 
   const [juices, setJuices] = useState(juiceList);
   const [productDetailsAddOns, setProductDetailsAddOns] = useState([]);
@@ -167,7 +166,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
     formData.append('item_id', productDetailsAddOns[0]?.id);
     formData.append('restaurant_id', restroId);
     formData.append('quantity', qty);
-    formData.append('add_on_item', JSON.stringify(productAddOnIdArray))
+    formData.append('add_on_item', JSON.stringify(productAddOnIdArray));
     Post(Constants.addToCart, formData).then(
       async res => {
         if (res.Status === '200') {
@@ -197,7 +196,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
     return (
       <BottomSheet
         isVisible={showBottomSheet}
-        containerStyle={{ backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)' }}>
+        containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}>
         <View
           style={{
             backgroundColor: Colors.whiteColor,
@@ -232,23 +231,23 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
         }}
         style={styles.addToCartAndItemsInfoWrapStyle}>
         <View>
-          <Text style={{ ...Fonts.darkPrimaryColor16Medium }}>{qty} ITEM</Text>
-          <Text style={{ ...Fonts.whiteColor15Regular }}>
-            {/* ${((productDetailsAddOns[0]?.price * qty)).toFixed(1)} */}
-            ${((productDetailsAddOns[0]?.price * qty) + addOnPrice).toFixed(1)}
+          <Text style={{...Fonts.darkPrimaryColor16Medium}}>{qty} ITEM</Text>
+          <Text style={{...Fonts.whiteColor15Regular}}>
+            {/* ${((productDetailsAddOns[0]?.price * qty)).toFixed(1)} */}$
+            {(productDetailsAddOns[0]?.price * qty + addOnPrice).toFixed(1)}
           </Text>
         </View>
-        <Text style={{ ...Fonts.whiteColor16Medium }}>Add to Cart</Text>
+        <Text style={{...Fonts.whiteColor16Medium}}>Add to Cart</Text>
       </TouchableOpacity>
     );
   }
 
-  function updateOptions({ id }) {
+  function updateOptions({id}) {
     const newList =
       productDetailsAddOns[0]?.product_add_on[1]?.product_add_on_option.map(
         item => {
           if (item.id === id) {
-            const updatedItem = { ...item, isSelected: !item.isSelected };
+            const updatedItem = {...item, isSelected: !item.isSelected};
             return updatedItem;
           }
           return item;
@@ -276,7 +275,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
               <View style={styles.optionWrapStyle}>
                 <TouchableOpacity
                   activeOpacity={0.9}
-                  onPress={() => updateOptions({ id: item.id })}
+                  onPress={() => updateOptions({id: item.id})}
                   style={{
                     ...styles.radioButtonStyle,
                     backgroundColor: item.isSelected
@@ -299,7 +298,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
                   {item?.title}
                 </Text>
               </View>
-              <Text style={{ ...Fonts.blackColor16Medium }}>${item?.price}</Text>
+              <Text style={{...Fonts.blackColor16Medium}}>${item?.price}</Text>
             </View>
           ),
         )}
@@ -314,7 +313,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
           backgroundColor: Colors.bodyBackColor,
           padding: Sizes.fixPadding,
         }}>
-        <Text style={{ ...Fonts.grayColor16Medium }}>Options</Text>
+        <Text style={{...Fonts.grayColor16Medium}}>Options</Text>
       </View>
     );
   }
@@ -336,7 +335,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
     return productDetailsAddOns[0]?.product_add_on[0]?.product_add_on_option.map(
       (item, index) => (
         <View style={styles.sizesWrapStyle}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => setSizeIndex(index)}
@@ -368,7 +367,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
               ({contain})
             </Text> */}
           </View>
-          <Text style={{ ...Fonts.blackColor16Medium }}>${item?.price}</Text>
+          <Text style={{...Fonts.blackColor16Medium}}>${item?.price}</Text>
         </View>
       ),
     );
@@ -388,11 +387,9 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
   }
 
   function productAddOnList() {
-    return productDetailsAddOns[0]?.product_add_on.map(
-      (item, index) => (
-
-        <View>
-          {/* <Text
+    return productDetailsAddOns[0]?.product_add_on.map((item, index) => (
+      <View>
+        {/* <Text
               style={{
                 // marginLeft: Sizes.fixPadding,
                 ...Fonts.blackColor19Medium,
@@ -400,17 +397,15 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
               {item?.title}
             </Text> */}
 
-          <View style={styles.sizeTitleStyle}>
-            <Text style={{ ...Fonts.grayColor16Medium }}>{item?.title}</Text>
-            <Text style={{ ...Fonts.grayColor16Medium }}>Price</Text>
-          </View>
-          {/* Array code  */}
-          {productAddOnListArray(index, item?.is_multiple)}
-          {/* end array code  */}
-
+        <View style={styles.sizeTitleStyle}>
+          <Text style={{...Fonts.grayColor16Medium}}>{item?.title}</Text>
+          <Text style={{...Fonts.grayColor16Medium}}>Price</Text>
         </View>
-      ),
-    );
+        {/* Array code  */}
+        {productAddOnListArray(index, item?.is_multiple)}
+        {/* end array code  */}
+      </View>
+    ));
   }
   function setAddOnDetail(index_value, item_id, price) {
     //setProductAddOnIdArray(fruits);
@@ -426,7 +421,6 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
       fruits.push(item_id);
     }
 
-
     setProductAddOnId(item_id);
     setProductAddOnListId(index_value);
     setProductAddOnIdArray(fruits);
@@ -434,126 +428,123 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
   }
 
   function productAddOnListArray(index_value, is_multiple) {
-    return is_multiple == 'true' ? productDetailsAddOns[0]?.product_add_on[index_value]?.product_add_on_option.map(
-      (item, index) => (
-        <View
-          style={{
-            paddingHorizontal: Sizes.fixPadding,
-          }}>
-          {/* Array code  */}
+    return is_multiple == 'true'
+      ? productDetailsAddOns[0]?.product_add_on[
+          index_value
+        ]?.product_add_on_option.map((item, index) => (
+          <View
+            style={{
+              paddingHorizontal: Sizes.fixPadding,
+            }}>
+            {/* Array code  */}
 
-          <View style={styles.sizesWrapStyle}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity
-                activeOpacity={0.9}
-
-                // onPress={() => {
-                //   setProductAddOnId(item.id);
-                //   setProductAddOnListId(index_value);
-                //   setProductAddOnIdArray(item.id);
-                // }}
-                onPress={() => {
-                  setAddOnDetail(index_value, item.id, parseInt(item.price));
-                }}
-
-                style={{
-                  // marginLeft: Sizes.fixPadding,
-                  ...styles.radioButtonStyle,
-                  backgroundColor:
-                    (productAddOnIdArray.includes(item.id)) ? Colors.primaryColor : Colors.whiteColor,
-                }}>
-                {(productAddOnIdArray.includes(item.id)) ? (
-                  <MaterialIcons
-                    name="done"
-                    size={18}
-                    color={Colors.whiteColor}
-                  />
-                ) : null}
-              </TouchableOpacity>
-              <Text
-                style={{
-                  marginLeft: Sizes.fixPadding,
-                  ...Fonts.blackColor16Medium,
-                }}>
-                {item?.title}
-              </Text>
-              {/* <Text
+            <View style={styles.sizesWrapStyle}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  // onPress={() => {
+                  //   setProductAddOnId(item.id);
+                  //   setProductAddOnListId(index_value);
+                  //   setProductAddOnIdArray(item.id);
+                  // }}
+                  onPress={() => {
+                    setAddOnDetail(index_value, item.id, parseInt(item.price));
+                  }}
+                  style={{
+                    // marginLeft: Sizes.fixPadding,
+                    ...styles.radioButtonStyle,
+                    backgroundColor: productAddOnIdArray.includes(item.id)
+                      ? Colors.primaryColor
+                      : Colors.whiteColor,
+                  }}>
+                  {productAddOnIdArray.includes(item.id) ? (
+                    <MaterialIcons
+                      name="done"
+                      size={18}
+                      color={Colors.whiteColor}
+                    />
+                  ) : null}
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    marginLeft: Sizes.fixPadding,
+                    ...Fonts.blackColor16Medium,
+                  }}>
+                  {item?.title}
+                </Text>
+                {/* <Text
               style={{
                 marginLeft: Sizes.fixPadding,
                 ...Fonts.grayColor14Medium,
               }}>
               ({contain})
             </Text> */}
+              </View>
+              <Text style={{...Fonts.blackColor16Medium}}>${item?.price}</Text>
             </View>
-            <Text style={{ ...Fonts.blackColor16Medium }}>${item?.price}</Text>
+
+            {/* end array code  */}
           </View>
+        ))
+      : productDetailsAddOns[0]?.product_add_on[
+          index_value
+        ]?.product_add_on_option.map((item, index) => (
+          <View
+            style={{
+              paddingHorizontal: Sizes.fixPadding,
+            }}>
+            {/* Array code  */}
 
-          {/* end array code  */}
-
-        </View>
-      ),
-    ) : productDetailsAddOns[0]?.product_add_on[index_value]?.product_add_on_option.map(
-      (item, index) => (
-        <View
-          style={{
-            paddingHorizontal: Sizes.fixPadding,
-          }}>
-          {/* Array code  */}
-
-          <View style={styles.sizesWrapStyle}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <TouchableOpacity
-                activeOpacity={0.9}
-
-                // onPress={() => {
-                //   setProductAddOnId(item.id);
-                //   setProductAddOnListId(index_value);
-                //   setProductAddOnIdArray(item.id);
-                // }}
-                onPress={() => {
-                  setAddOnDetail(index_value, item.id, parseInt(item.price));
-                }}
-
-                style={{
-                  // marginLeft: Sizes.fixPadding,
-                  ...styles.radioButtonStyle,
-                  backgroundColor:
-                    productAddOnId == item.id ? Colors.primaryColor : Colors.whiteColor,
-                }}>
-                {productAddOnId == item.id ? (
-                  <MaterialIcons
-                    name="done"
-                    size={18}
-                    color={Colors.whiteColor}
-                  />
-                ) : null}
-              </TouchableOpacity>
-              <Text
-                style={{
-                  marginLeft: Sizes.fixPadding,
-                  ...Fonts.blackColor16Medium,
-                }}>
-                {item?.title}
-              </Text>
-              {/* <Text
+            <View style={styles.sizesWrapStyle}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  // onPress={() => {
+                  //   setProductAddOnId(item.id);
+                  //   setProductAddOnListId(index_value);
+                  //   setProductAddOnIdArray(item.id);
+                  // }}
+                  onPress={() => {
+                    setAddOnDetail(index_value, item.id, parseInt(item.price));
+                  }}
+                  style={{
+                    // marginLeft: Sizes.fixPadding,
+                    ...styles.radioButtonStyle,
+                    backgroundColor:
+                      productAddOnId == item.id
+                        ? Colors.primaryColor
+                        : Colors.whiteColor,
+                  }}>
+                  {productAddOnId == item.id ? (
+                    <MaterialIcons
+                      name="done"
+                      size={18}
+                      color={Colors.whiteColor}
+                    />
+                  ) : null}
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    marginLeft: Sizes.fixPadding,
+                    ...Fonts.blackColor16Medium,
+                  }}>
+                  {item?.title}
+                </Text>
+                {/* <Text
               style={{
                 marginLeft: Sizes.fixPadding,
                 ...Fonts.grayColor14Medium,
               }}>
               ({contain})
             </Text> */}
+              </View>
+              <Text style={{...Fonts.blackColor16Medium}}>${item?.price}</Text>
             </View>
-            <Text style={{ ...Fonts.blackColor16Medium }}>${item?.price}</Text>
+
+            {/* end array code  */}
           </View>
-
-          {/* end array code  */}
-
-        </View>
-      ),
-    );
+        ));
   }
-
-
 
   function addNewItemTitle() {
     return (
@@ -572,8 +563,8 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
     if (productDetailsAddOns[0]?.product_add_on.length >= 1) {
       return (
         <View style={styles.sizeTitleStyle}>
-          <Text style={{ ...Fonts.grayColor16Medium }}>Size</Text>
-          <Text style={{ ...Fonts.grayColor16Medium }}>Price</Text>
+          <Text style={{...Fonts.grayColor16Medium}}>Size</Text>
+          <Text style={{...Fonts.grayColor16Medium}}>Price</Text>
         </View>
       );
     }
@@ -583,7 +574,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
     return (
       <View style={styles.custmizeItemInfoWrapStyle}>
         <Image
-          source={{ uri: productDetailsAddOns[0]?.image }}
+          source={{uri: productDetailsAddOns[0]?.image}}
           style={{
             width: 80.0,
             height: 80.0,
@@ -597,7 +588,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
             justifyContent: 'space-between',
             marginLeft: Sizes.fixPadding,
           }}>
-          <Text style={{ ...Fonts.blackColor16Medium }}>
+          <Text style={{...Fonts.blackColor16Medium}}>
             {productDetailsAddOns[0]?.name}
           </Text>
           <View
@@ -606,10 +597,10 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={{ ...Fonts.primaryColor20MediumBold }}>
+            <Text style={{...Fonts.primaryColor20MediumBold}}>
               ${productDetailsAddOns[0]?.price}
             </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => {
@@ -651,7 +642,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
   function coffeeInfo() {
     return (
       <View style={styles.coffeeInfoWrapStyle}>
-        <Text style={{ ...Fonts.blackColor19Medium }}>Coffee</Text>
+        <Text style={{...Fonts.blackColor19Medium}}>Coffee</Text>
         <Text
           style={{
             marginBottom: Sizes.fixPadding + 5.0,
@@ -675,19 +666,19 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
                   borderRadius: Sizes.fixPadding - 5.0,
                 }}
               />
-              <View style={{ flex: 1, marginLeft: Sizes.fixPadding }}>
+              <View style={{flex: 1, marginLeft: Sizes.fixPadding}}>
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Text style={{ ...Fonts.blackColor16Medium }}>{item.name}</Text>
+                  <Text style={{...Fonts.blackColor16Medium}}>{item.name}</Text>
                   <MaterialIcons
                     name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
                     size={22}
                     color={Colors.grayColor}
                     onPress={() => {
-                      handleCoffeesUpdate({ id: item.id });
+                      handleCoffeesUpdate({id: item.id});
                       ToastAndroid.showWithGravity(
                         !item.isFavourite
                           ? 'Added to Favourite'
@@ -712,7 +703,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Text style={{ ...Fonts.primaryColor20MediumBold }}>
+                  <Text style={{...Fonts.primaryColor20MediumBold}}>
                     ${item.amount.toFixed(1)}
                   </Text>
                   <TouchableOpacity
@@ -734,10 +725,10 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
     );
   }
 
-  function handleCoffeesUpdate({ id }) {
+  function handleCoffeesUpdate({id}) {
     const newList = coffees.map(item => {
       if (item.id === id) {
-        const updatedItem = { ...item, isFavourite: !item.isFavourite };
+        const updatedItem = {...item, isFavourite: !item.isFavourite};
         return updatedItem;
       }
       return item;
@@ -752,7 +743,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
           <View key={`${item.id}`}>
             {item?.item_category_list.length !== 0 && (
               <>
-                <Text style={{ ...Fonts.blackColor19Medium }}>{item?.name}</Text>
+                <Text style={{...Fonts.blackColor19Medium}}>{item?.name}</Text>
                 <Text
                   style={{
                     marginBottom: Sizes.fixPadding + 5.0,
@@ -772,20 +763,20 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
                     marginBottom: Sizes.fixPadding * 2.0,
                   }}>
                   <Image
-                    source={{ uri: item?.items?.image }}
+                    source={{uri: item?.items?.image}}
                     style={{
                       width: 90.0,
                       height: 100.0,
                       borderRadius: Sizes.fixPadding - 5.0,
                     }}
                   />
-                  <View style={{ flex: 1, marginLeft: Sizes.fixPadding }}>
+                  <View style={{flex: 1, marginLeft: Sizes.fixPadding}}>
                     <View
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                       }}>
-                      <Text style={{ ...Fonts.blackColor16Medium }}>
+                      <Text style={{...Fonts.blackColor16Medium}}>
                         {item?.items?.name}
                       </Text>
                       <MaterialIcons
@@ -795,7 +786,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
                         size={22}
                         color={Colors.grayColor}
                         onPress={() => {
-                          handleJuicesUpdate({ id: item.id });
+                          handleJuicesUpdate({id: item.id});
                           ToastAndroid.showWithGravity(
                             !item.isFavourite
                               ? 'Added to Favourite'
@@ -815,17 +806,16 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
                       Lorem Ipsum is simply dummy text of the printing and
                       typesetting industry.
                     </Text>
-                    <TouchableOpacity onPress={() => {
-                      productDetails(item?.items);
-                    }}>
-
-
+                    <TouchableOpacity
+                      onPress={() => {
+                        productDetails(item?.items);
+                      }}>
                       <View
                         style={{
                           flexDirection: 'row',
                           justifyContent: 'space-between',
                         }}>
-                        <Text style={{ ...Fonts.primaryColor20MediumBold }}>
+                        <Text style={{...Fonts.primaryColor20MediumBold}}>
                           ${item?.items?.price}
                         </Text>
                         <TouchableOpacity
@@ -853,10 +843,10 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
     );
   }
 
-  function handleJuicesUpdate({ id }) {
+  function handleJuicesUpdate({id}) {
     const newList = productList.map(item => {
       if (item.id === id) {
-        const updatedItem = { ...item, isFavourite: !item.isFavourite };
+        const updatedItem = {...item, isFavourite: !item.isFavourite};
         return updatedItem;
       }
       return item;
@@ -865,20 +855,23 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
   }
 
   function popularItemsInfo() {
-    const renderItem = ({ item }) => (
+    const renderItem = ({item}) => (
       <View style={styles.popularItemInfoWrapStyle}>
         {/* <Spinner color={'#fff'} visible={loading} /> */}
         <Image
-          source={{ uri: item?.image }}
+          source={{uri: item?.image}}
           style={styles.popularItemImageStyle}
         />
         <MaterialIcons
           name={item.isFavourite ? 'bookmark' : 'bookmark-outline'}
           size={22}
           color={Colors.whiteColor}
-          style={{ position: 'absolute', right: 10.0, top: 10.0 }}
+          style={{position: 'absolute', right: 10.0, top: 10.0}}
           onPress={() => {
-            handlePopularItemsUpdate({ id: item.id, restaurant_id: item.restaurant_id });
+            handlePopularItemsUpdate({
+              id: item.id,
+              restaurant_id: item.restaurant_id,
+            });
             ToastAndroid.showWithGravity(
               !item.isFavourite
                 ? 'Added to Favourite'
@@ -895,7 +888,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
             paddingBottom: Sizes.fixPadding,
             paddingTop: Sizes.fixPadding - 5.0,
           }}>
-          <Text style={{ ...Fonts.blackColor15Medium }}>{item?.name}</Text>
+          <Text style={{...Fonts.blackColor15Medium}}>{item?.name}</Text>
           <Text
             style={{
               marginTop: Sizes.fixPadding - 7.0,
@@ -903,9 +896,10 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
             }}>
             {item?.cat_name}
           </Text>
-          <TouchableOpacity onPress={() => {
-            productDetails(item);
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              productDetails(item);
+            }}>
             <View
               style={{
                 marginTop: Sizes.fixPadding - 7.0,
@@ -913,7 +907,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-              <Text style={{ ...Fonts.primaryColor20MediumBold }}>
+              <Text style={{...Fonts.primaryColor20MediumBold}}>
                 ${item?.price}
               </Text>
               <View style={styles.addIconWrapStyle}>
@@ -936,6 +930,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
       <View
         style={{
           marginVertical: Sizes.fixPadding,
+          marginHorizontal: 10,
         }}>
         <View
           style={{
@@ -944,9 +939,9 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <Text style={{ ...Fonts.blackColor19Medium }}>Popular Items</Text>
+          <Text style={{...Fonts.blackColor19Medium}}>Popular Items</Text>
           <TouchableOpacity onPress={() => navigation.navigate('PopularItems')}>
-            <Text style={{ ...Fonts.primaryColor16Medium }}>See all</Text>
+            <Text style={{...Fonts.primaryColor16Medium}}>See all</Text>
           </TouchableOpacity>
         </View>
         <FlatList
@@ -965,7 +960,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
     );
   }
 
-  function handlePopularItemsUpdate({ id, restaurant_id }) {
+  function handlePopularItemsUpdate({id, restaurant_id}) {
     const newList = popularItemList.map(item => {
       if (item.id === id) {
         const formData = new FormData();
@@ -974,8 +969,7 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
         Post(Constants.favouriteFood, formData).then(
           async res => {
             if (res.status === 200) {
-
-              const updatedItem = { ...item, isFavourite: !item.isFavourite };
+              const updatedItem = {...item, isFavourite: !item.isFavourite};
               return updatedItem;
             }
           },
@@ -987,10 +981,9 @@ const Products = ({ props, popularItemList, productList, restroId }) => {
       }
       return item;
     });
-    console.log("newList=>>>>>>>>>>>>>>>>>>>>>>>>>>>>", newList);
+    console.log('newList=>>>>>>>>>>>>>>>>>>>>>>>>>>>>', newList);
     setPopularItems(newList);
   }
-
 };
 
 const styles = StyleSheet.create({

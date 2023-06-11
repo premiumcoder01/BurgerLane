@@ -38,7 +38,6 @@ class RestaurantDetailScreen extends Component {
 
   restaurantDetails = () => {
     this.setState({loading: true});
-    console.log('this.props.routeeeeeeeeeeeeeee');
     console.log(this.props.route);
 
     GetApi(
@@ -201,11 +200,7 @@ const TabBarView = ({
     {key: 'second', title: 'Review'},
     {key: 'third', title: 'Information'},
   ]);
-  // let data;
-  // data = JSON.parse(JSON.stringify(restaurantDetails));
-  // console.log("restaurantDetails===================", data.id);
-
-  // console.log("restaurantDetails===================", data.id);
+ 
 
   const layout = useWindowDimensions();
 
@@ -238,18 +233,18 @@ const TabBarView = ({
           indicatorStyle={{
             height: 2.5,
             marginLeft: index == 0 ? Sizes.fixPadding + 5.0 : 0.0,
-            backgroundColor: Colors.darkPrimaryColor,
+            backgroundColor: "transparent",
           }}
           tabStyle={{
             width: layout.width / 3.1,
-            height: 52.0,
+            height: 60.0,
           }}
-          style={{backgroundColor: Colors.primaryColor, elevation: 0.0}}
+          style={{backgroundColor: Colors.primaryColor,elevation:0}}
           renderLabel={({route, focused, color}) => (
             <Text
               style={{
-                marginLeft: index == 0 ? Sizes.fixPadding + 5.0 : 0.0,
-                marginRight: index == 2 ? Sizes.fixPadding : 0.0,
+                // marginLeft: index == 0 ? Sizes.fixPadding + 5.0 : 0.0,
+                // marginRight: index == 2 ? Sizes.fixPadding : 0.0,
                 ...Fonts.whiteColor15Medium,
               }}>
               {route.title}
@@ -279,10 +274,5 @@ const styles = StyleSheet.create({
   },
 });
 
-// RestaurantDetailScreen.navigationOptions = () => {
-//     return {
-//         header: () => null,
-//     }
-// }
 
 export default RestaurantDetailScreen;
