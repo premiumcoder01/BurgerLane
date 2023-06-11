@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Image, Text, TouchableOpacity, FlatList } from 'react-native';
-import { Fonts, Colors, Sizes, ToastAndroid } from '../../constants/styles';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, Image, Text, TouchableOpacity, FlatList} from 'react-native';
+import {Fonts, Colors, Sizes, ToastAndroid} from '../../constants/styles';
 import styles from './styles';
-import { GetApi } from '../../helpers/Service';
+import {GetApi} from '../../helpers/Service';
 import Spinner from '../../components/Spinner';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const CategoryList = item => {
   const route = item?.route?.params?.item;
@@ -19,7 +19,6 @@ const CategoryList = item => {
   const renderItem = item => (
     <TouchableOpacity
       onPress={() =>
-        //console.log(item.item.restaurant_id)
         navigation.navigate('RestaurantDetail', {
           details: item.item,
           from: 'CategoryList',
@@ -31,11 +30,12 @@ const CategoryList = item => {
         source={{
           uri: item?.item?.image,
         }}
+        resizeMode='contain'
         style={styles.imgContainer}
       />
       <View style={styles.productContainer}>
         <View style={styles.rowContainer}>
-          <Text style={{ ...Fonts.blackColor16Medium }}>{item?.item?.name}</Text>
+          <Text style={{...Fonts.blackColor16Medium}}>{item?.item?.name}</Text>
         </View>
         <Text
           style={{
@@ -49,16 +49,15 @@ const CategoryList = item => {
   );
 
   return (
-    <View style={{ flex: 1, padding: 30 }}>
+    <View style={{flex: 1, padding: 20, backgroundColor: Colors.whiteColor}}>
       <Spinner color={'#fff'} visible={state.loading} />
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="arrowleft" size={30} color="#000" />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.blackColor22Medium }}>Restaurants List</Text>
+        <Text style={{...Fonts.blackColor22Medium}}>Restaurants List</Text>
         <View />
       </View>
-
       <FlatList
         data={state?.allList}
         keyExtractor={item => `${item.id}`}

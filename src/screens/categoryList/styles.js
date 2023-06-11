@@ -4,7 +4,12 @@ import {Colors, Sizes} from '../../constants/styles';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginBottom: Sizes.fixPadding * 2.0,
+    marginBottom: Sizes.fixPadding,
+    backgroundColor: 'white',
+    elevation: 4,
+    padding: 10,
+    borderRadius: 10,
+    margin: 5,
   },
   headerContainer: {
     flexDirection: 'row',

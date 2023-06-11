@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, Text, View, Image} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {Dimensions} from 'react-native';
 import {Colors, Fonts, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -11,20 +11,22 @@ import {TouchableOpacity} from 'react-native';
 import Constants from '../../helpers/Constant';
 import {Post} from '../../helpers/Service';
 import Geolocation from '@react-native-community/geolocation';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {FlatList} from 'react-native';
+import {BottomSheet} from 'react-native-elements';
 
 const {width} = Dimensions.get('screen');
-
-const intialAmount = 2.5;
 
 const Discover = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const [showAddressSheet, setShowAddressSheet] = useState(false);
   const [currentAddress, setCurrentAddress] = useState('');
   const [offerList, setOfferList] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
+  const [userAddressesList, setUserAddressesList] = useState([]);
 
   const getLatLong = async () => {
     return new Promise((resolve, reject) => {
@@ -50,6 +52,7 @@ const Discover = () => {
         setItemList(res?.data?.item_list?.data);
         setCurrentAddress(res?.data?.current_location);
         setCategoryList(res?.data?.categories?.data);
+        setUserAddressesList(res?.data?.address_data);
         setLoading(false);
       }
     });
@@ -67,7 +70,6 @@ const Discover = () => {
       },
     );
   };
-
 
   const restaurantListCategory = async item => {
     let lat;
@@ -95,15 +97,169 @@ const Discover = () => {
     );
   };
 
+  const setDeafultAddress = id => {
+    const formData = new FormData();
+    formData.append('address_id', id);
+    setLoading(true);
+    Post(Constants.set_default_address, formData).then(async res => {
+      if (res.status === 200) {
+        setCurrentAddress(res?.data?.city);
+        setShowAddressSheet(false)
+        setLoading(false);
+      }
+    });
+  };
+
   useEffect(() => {
     Home();
     OfferList();
   }, []);
 
+  console.log(currentAddress)
+
+  const addresses = () => {
+    return (
+      <ScrollView showsHorizontalScrollIndicator={false}>
+        {userAddressesList.map(item => (
+          <TouchableOpacity
+            onPress={() => setDeafultAddress(item.id)}
+            style={styles.addresslistStyle}>
+            <View
+              style={{
+                padding: Sizes.fixPadding,
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+              }}>
+              <MaterialIcons
+                name="location-on"
+                size={17}
+                color={Colors.darkPrimaryColor}
+              />
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  marginHorizontal: 10,
+                }}>
+                <View>
+                  <Text style={{...Fonts.blackColor15Medium}}>
+                    {item?.name}
+                  </Text>
+                  <Text style={{...Fonts.blackColor14Regular}}>
+                    {item?.phone}
+                  </Text>
+                  <Text style={{...Fonts.blackColor14Regular}}>
+                    {item?.house_no} ,{item?.area} ,{item?.city} ,{item?.state}{' '}
+                    ,{item?.pincode}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginVertical: 10,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowAddressSheet(false);
+                      navigation.navigate('EditDeliveryAddress', {
+                        addressId: item.id,
+                      });
+                    }}
+                    style={{marginRight: 20}}>
+                    <FontAwesome5
+                      name="edit"
+                      size={15}
+                      color={Colors.darkPrimaryColor}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <MaterialIcons
+                      name="delete"
+                      size={17}
+                      color={Colors.darkPrimaryColor}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+
+  const selectAddressSheet = () => {
+    return (
+      <BottomSheet
+        isVisible={showAddressSheet}
+        containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            paddingTop: Sizes.fixPadding + 5.0,
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
+            position: 'relative',
+          }}>
+          <TouchableOpacity onPress={() => setShowAddressSheet(false)}>
+            <Text
+              style={{
+                ...Fonts.blackColor14Regular,
+                color: '#CA445D',
+                textAlign: 'right',
+                fontWeight: 'bold',
+                marginHorizontal: 30,
+              }}>
+              Close
+            </Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              backgroundColor: Colors.grayColor,
+              height: 0.3,
+              marginHorizontal: Sizes.fixPadding * 2,
+              marginVertical: Sizes.fixPadding + 5.0,
+            }}
+          />
+          {addresses()}
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => {
+              setShowAddressSheet(false);
+              navigation.navigate('AddDeliveryAddress');
+            }}
+            style={{
+              margin: 20,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              padding: 10,
+              backgroundColor: '#CA445D',
+              marginHorizontal: 30,
+              borderRadius: 25,
+              alignItems: 'center',
+            }}>
+            <MaterialIcons name="add" color="#fff" size={22} />
+            <Text
+              style={{
+                marginLeft: Sizes.fixPadding,
+                ...Fonts.blueColor15Medium,
+                color: '#fff',
+              }}>
+              Add New Address
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </BottomSheet>
+    );
+  };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.primaryColor}}>
       <StatusBar backgroundColor={Colors.primaryColor} />
       <Spinner color={'#fff'} visible={loading} />
+
       {/* header */}
       <View
         style={{
@@ -113,7 +269,7 @@ const Discover = () => {
           marginHorizontal: 20,
           marginVertical: 10,
         }}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowAddressSheet(true)}>
           <Text
             style={{
               ...Fonts.darkPrimaryColor,
@@ -190,6 +346,7 @@ const Discover = () => {
                 })}
               </ScrollView>
             </View>
+
             {/* category */}
             <View>
               <Text
@@ -237,6 +394,7 @@ const Discover = () => {
                 })}
               </ScrollView>
             </View>
+
             {/* All Items */}
             <View>
               <View
@@ -301,6 +459,7 @@ const Discover = () => {
           </View>
         </ScrollView>
       </View>
+      {selectAddressSheet()}
     </SafeAreaView>
   );
 };
@@ -346,5 +505,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     borderTopLeftRadius: Sizes.fixPadding,
     borderTopRightRadius: Sizes.fixPadding,
+  },
+  addresslistStyle: {
+    backgroundColor: 'white',
+    borderRadius: Sizes.fixPadding,
+    elevation: 4,
+    marginBottom: 10,
+    marginHorizontal: Sizes.fixPadding + 20,
   },
 });
