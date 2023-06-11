@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Image, Text, TouchableOpacity, FlatList } from 'react-native';
-import { Fonts, Colors, Sizes, ToastAndroid } from '../../constants/styles';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, Image, Text, TouchableOpacity, FlatList} from 'react-native';
+import {Fonts, Colors, Sizes, ToastAndroid} from '../../constants/styles';
 import styles from './styles';
-import { GetApi } from '../../helpers/Service';
+import {GetApi} from '../../helpers/Service';
 import Spinner from '../../components/Spinner';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const AllProductList = item => {
   const route = item?.route?.params?.item;
@@ -32,8 +32,8 @@ const AllProductList = item => {
               routeName === 'Product Ordereds'
                 ? res?.data?.orders
                 : routeName === 'Hot Sale'
-                  ? res?.data?.restaurant
-                  : res?.data?.favouriteRestaurant,
+                ? res?.data?.restaurant
+                : res?.data?.favouriteRestaurant,
           }));
         }
         setState(prev => ({
@@ -74,19 +74,19 @@ const AllProductList = item => {
                 ? 'https://burgerlane.isynbus.com/storage/restaurant/1668432288restaurant.jpg'
                 : item?.item?.image
               : routeName === 'Hot Sale'
-                ? item?.item?.restaurant[0]?.image
-                : item?.item?.favourite_restaurant?.image,
+              ? item?.item?.restaurant[0]?.image
+              : item?.item?.favourite_restaurant?.image,
         }}
         style={styles.imgContainer}
       />
       <View style={styles.productContainer}>
         <View style={styles.rowContainer}>
-          <Text style={{ ...Fonts.blackColor16Medium }}>
+          <Text style={{...Fonts.blackColor16Medium}}>
             {routeName === 'Product Ordereds'
               ? item?.item?.customer_name
               : routeName === 'Hot Sale'
-                ? item?.item?.restaurant[0]?.name
-                : item?.item?.favourite_restaurant?.name}
+              ? item?.item?.restaurant[0]?.name
+              : item?.item?.favourite_restaurant?.name}
           </Text>
         </View>
         <Text
@@ -97,21 +97,21 @@ const AllProductList = item => {
           {routeName === 'Product Ordereds'
             ? item?.item?.customer_address
             : routeName === 'Hot Sale'
-              ? item?.item?.restaurant[0]?.address
-              : item?.item?.favourite_restaurant?.address}
+            ? item?.item?.restaurant[0]?.address
+            : item?.item?.favourite_restaurant?.address}
         </Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <View style={{ flex: 1, padding: 30 }}>
+    <View style={{flex: 1, padding: 30}}>
       <Spinner color={'#fff'} visible={state.loading} />
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="arrowleft" size={30} color="#000" />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.blackColor22Medium }}>{routeName} List</Text>
+        <Text style={{...Fonts.blackColor22Medium}}>{routeName} List</Text>
         <View />
       </View>
 

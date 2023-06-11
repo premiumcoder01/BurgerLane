@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Component } from 'react';
+import React, {useState} from 'react';
+import {Component} from 'react';
 import {
   BackHandler,
   SafeAreaView,
@@ -9,15 +9,15 @@ import {
   Text,
 } from 'react-native';
 // import { withNavigation } from "react-navigation";
-import { Colors, Fonts, Sizes } from '../../constants/styles';
+import {Colors, Fonts, Sizes} from '../../constants/styles';
 import CollapsingToolbar from '../../components/sliverAppBar';
-import { Snackbar } from 'react-native-paper';
+import {Snackbar} from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { TabView, TabBar } from 'react-native-tab-view';
+import {TabView, TabBar} from 'react-native-tab-view';
 import Products from '../products/productsScreen';
 import Review from '../review/reviewScreen';
 import Information from '../information/informationScreen';
-import { GetApi } from '../../helpers/Service';
+import {GetApi} from '../../helpers/Service';
 import Constants from '../../helpers/Constant';
 
 class RestaurantDetailScreen extends Component {
@@ -37,14 +37,14 @@ class RestaurantDetailScreen extends Component {
   }
 
   restaurantDetails = () => {
-    this.setState({ loading: true });
-    console.log("this.props.routeeeeeeeeeeeeeee");
+    this.setState({loading: true});
+    console.log('this.props.routeeeeeeeeeeeeeee');
     console.log(this.props.route);
-
 
     GetApi(
       //Constants.restaurantDetails + `${this.props.route?.params?.item?.id}`,
-      Constants.restaurantDetails + `${this.props.route?.params?.restaurant_id}`,
+      Constants.restaurantDetails +
+        `${this.props.route?.params?.restaurant_id}`,
     ).then(
       async res => {
         if (res.Status === 200) {
@@ -54,10 +54,10 @@ class RestaurantDetailScreen extends Component {
             productCategories: res?.data?.categories,
           });
         }
-        this.setState({ loading: false });
+        this.setState({loading: false});
       },
       err => {
-        this.setState({ loading: false });
+        this.setState({loading: false});
         console.log(err.response.data);
       },
     );
@@ -85,7 +85,7 @@ class RestaurantDetailScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bodyBackColor }}>
+      <SafeAreaView style={{flex: 1, backgroundColor: Colors.bodyBackColor}}>
         <CollapsingToolbar
           leftItem={
             <MaterialIcons
@@ -104,7 +104,7 @@ class RestaurantDetailScreen extends Component {
               name={this.state.isFavourite ? 'bookmark' : 'bookmark-outline'}
               size={25}
               color={Colors.whiteColor}
-              style={{ marginTop: Sizes.fixPadding + 5.0 }}
+              style={{marginTop: Sizes.fixPadding + 5.0}}
               onPress={() =>
                 this.setState({
                   isFavourite: !this.state.isFavourite,
@@ -115,7 +115,7 @@ class RestaurantDetailScreen extends Component {
           }
           element={
             <View>
-              <Text style={{ ...Fonts.whiteColor22Medium }}>
+              <Text style={{...Fonts.whiteColor22Medium}}>
                 {this.state.restaurantDetails?.name}
               </Text>
               <View
@@ -166,7 +166,7 @@ class RestaurantDetailScreen extends Component {
             uri: this.state.restaurantDetails?.image,
           }}
           childrenMinHeight={720}>
-          <View style={{ flex: 1, backgroundColor: Colors.primaryColor }}>
+          <View style={{flex: 1, backgroundColor: Colors.primaryColor}}>
             <TabBarView
               props={this.props}
               restaurantDetails={this.state.restaurantDetails}
@@ -178,7 +178,7 @@ class RestaurantDetailScreen extends Component {
         <Snackbar
           style={styles.snackBarStyle}
           visible={this.state.showSnackBar}
-          onDismiss={() => this.setState({ showSnackBar: false })}>
+          onDismiss={() => this.setState({showSnackBar: false})}>
           {!this.state.isFavourite
             ? 'Removed from Favourite'
             : 'Added to Favourite'}
@@ -188,23 +188,28 @@ class RestaurantDetailScreen extends Component {
   }
 }
 
-const TabBarView = ({ props, restaurantDetails, popularItems, productList, restroId }) => {
+const TabBarView = ({
+  props,
+  restaurantDetails,
+  popularItems,
+  productList,
+  restroId,
+}) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: 'first', title: 'Products' },
-    { key: 'second', title: 'Review' },
-    { key: 'third', title: 'Information' },
+    {key: 'first', title: 'Products'},
+    {key: 'second', title: 'Review'},
+    {key: 'third', title: 'Information'},
   ]);
   // let data;
-  // data = JSON.parse(JSON.stringify(restaurantDetails)); 
+  // data = JSON.parse(JSON.stringify(restaurantDetails));
   // console.log("restaurantDetails===================", data.id);
-
 
   // console.log("restaurantDetails===================", data.id);
 
   const layout = useWindowDimensions();
 
-  const renderScene = ({ route, jumpTo }) => {
+  const renderScene = ({route, jumpTo}) => {
     switch (route.key) {
       case 'first':
         return (
@@ -224,7 +229,7 @@ const TabBarView = ({ props, restaurantDetails, popularItems, productList, restr
 
   return (
     <TabView
-      navigationState={{ index, routes }}
+      navigationState={{index, routes}}
       renderScene={renderScene}
       onIndexChange={setIndex}
       renderTabBar={props => (
@@ -239,8 +244,8 @@ const TabBarView = ({ props, restaurantDetails, popularItems, productList, restr
             width: layout.width / 3.1,
             height: 52.0,
           }}
-          style={{ backgroundColor: Colors.primaryColor, elevation: 0.0 }}
-          renderLabel={({ route, focused, color }) => (
+          style={{backgroundColor: Colors.primaryColor, elevation: 0.0}}
+          renderLabel={({route, focused, color}) => (
             <Text
               style={{
                 marginLeft: index == 0 ? Sizes.fixPadding + 5.0 : 0.0,

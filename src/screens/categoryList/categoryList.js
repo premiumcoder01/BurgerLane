@@ -30,12 +30,30 @@ const CategoryList = item => {
         source={{
           uri: item?.item?.image,
         }}
-        resizeMode='contain'
+        resizeMode="contain"
         style={styles.imgContainer}
       />
       <View style={styles.productContainer}>
         <View style={styles.rowContainer}>
-          <Text style={{...Fonts.blackColor16Medium}}>{item?.item?.name}</Text>
+          <Text style={{...Fonts.blackColor18Medium}}>{item?.item?.name}</Text>
+          <View
+            style={{
+              padding: 5,
+              backgroundColor: 'green',
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderRadius: 10,
+            }}>
+            <Text
+              style={{
+                ...Fonts.blackColor14Regular,
+                color: '#fff',
+                marginRight: 5,
+              }}>
+              4.3
+            </Text>
+            <AntDesign name="star" size={10} color="#fff" />
+          </View>
         </View>
         <Text
           style={{
