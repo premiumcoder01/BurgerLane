@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, View, Image} from 'react-native';
+import {ScrollView, StyleSheet, Text, View, Image, Alert} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {Dimensions} from 'react-native';
 import {Colors, Fonts, Sizes} from '../../constants/styles';
@@ -15,6 +15,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {FlatList} from 'react-native';
 import {BottomSheet} from 'react-native-elements';
+import Modal from 'react-native-modal';
+import CustomSheet from '../../helpers/CustomSheet';
 
 const {width} = Dimensions.get('screen');
 
@@ -28,12 +30,18 @@ const Discover = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [userAddressesList, setUserAddressesList] = useState([]);
 
+  const [isModalVisible, setModalVisible] = useState(false);
+
   const getLatLong = async () => {
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(position => {
         resolve(position.coords);
       });
     });
+  };
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
   };
 
   const Home = async () => {
@@ -46,6 +54,8 @@ const Discover = () => {
     const formData = new FormData();
     formData.append('lat', lat);
     formData.append('long', long);
+    // formData.append('lat', '28.629341719747938');
+    // formData.append('long', '77.38402881349394');
     setLoading(true);
     Post(Constants.home, formData).then(async res => {
       if (res.status === 200) {
@@ -83,6 +93,8 @@ const Discover = () => {
     formData.append('category_id', item.id);
     formData.append('latitude', lat);
     formData.append('longitude', long);
+    // formData.append('latitude', '28.629341719747938');
+    // formData.append('longitude', '77.38402881349394');
     Post(Constants.restaurantByCategory, formData).then(
       async res => {
         if (res.status === 200) {
@@ -104,7 +116,7 @@ const Discover = () => {
     Post(Constants.set_default_address, formData).then(async res => {
       if (res.status === 200) {
         setCurrentAddress(res?.data?.city);
-        setShowAddressSheet(false)
+        setModalVisible(false);
         setLoading(false);
       }
     });
@@ -114,8 +126,6 @@ const Discover = () => {
     Home();
     OfferList();
   }, []);
-
-  console.log(currentAddress)
 
   const addresses = () => {
     return (
@@ -162,7 +172,7 @@ const Discover = () => {
                   }}>
                   <TouchableOpacity
                     onPress={() => {
-                      setShowAddressSheet(false);
+                      setModalVisible(false);
                       navigation.navigate('EditDeliveryAddress', {
                         addressId: item.id,
                       });
@@ -190,70 +200,7 @@ const Discover = () => {
     );
   };
 
-  const selectAddressSheet = () => {
-    return (
-      <BottomSheet
-        isVisible={showAddressSheet}
-        containerStyle={{backgroundColor: 'rgba(0.5, 0.25, 0, 0.2)'}}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            paddingTop: Sizes.fixPadding + 5.0,
-            borderTopLeftRadius: 25,
-            borderTopRightRadius: 25,
-            position: 'relative',
-          }}>
-          <TouchableOpacity onPress={() => setShowAddressSheet(false)}>
-            <Text
-              style={{
-                ...Fonts.blackColor14Regular,
-                color: '#CA445D',
-                textAlign: 'right',
-                fontWeight: 'bold',
-                marginHorizontal: 30,
-              }}>
-              Close
-            </Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              backgroundColor: Colors.grayColor,
-              height: 0.3,
-              marginHorizontal: Sizes.fixPadding * 2,
-              marginVertical: Sizes.fixPadding + 5.0,
-            }}
-          />
-          {addresses()}
-          <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => {
-              setShowAddressSheet(false);
-              navigation.navigate('AddDeliveryAddress');
-            }}
-            style={{
-              margin: 20,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              padding: 10,
-              backgroundColor: '#CA445D',
-              marginHorizontal: 30,
-              borderRadius: 25,
-              alignItems: 'center',
-            }}>
-            <MaterialIcons name="add" color="#fff" size={22} />
-            <Text
-              style={{
-                marginLeft: Sizes.fixPadding,
-                ...Fonts.blueColor15Medium,
-                color: '#fff',
-              }}>
-              Add New Address
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </BottomSheet>
-    );
-  };
+
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.primaryColor}}>
@@ -269,7 +216,7 @@ const Discover = () => {
           marginHorizontal: 20,
           marginVertical: 10,
         }}>
-        <TouchableOpacity onPress={() => setShowAddressSheet(true)}>
+        <TouchableOpacity onPress={toggleModal}>
           <Text
             style={{
               ...Fonts.darkPrimaryColor,
@@ -459,7 +406,54 @@ const Discover = () => {
           </View>
         </ScrollView>
       </View>
-      {selectAddressSheet()}
+    
+      <Modal
+        onBackdropPress={() => setModalVisible(false)}
+        onBackButtonPress={() => setModalVisible(false)}
+        isVisible={isModalVisible}
+        swipeDirection="down"
+        onSwipeComplete={toggleModal}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
+        animationInTiming={900}
+        backdropOpacity={0.5}
+        animationOutTiming={500}
+        backdropTransitionInTiming={1000}
+        backdropTransitionOutTiming={500}
+        style={styles.modal}>
+        <View style={styles.modalContent}>
+          <View style={styles.barIcon} />
+          <View style={{marginTop: 20}}>
+            {addresses()}
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
+                setModalVisible(false);
+                navigation.navigate('AddDeliveryAddress');
+              }}
+              style={{
+                margin: 20,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                padding: 10,
+                backgroundColor: '#CA445D',
+                marginHorizontal: 30,
+                borderRadius: 25,
+                alignItems: 'center',
+              }}>
+              <MaterialIcons name="add" color="#fff" size={22} />
+              <Text
+                style={{
+                  marginLeft: Sizes.fixPadding,
+                  ...Fonts.blueColor15Medium,
+                  color: '#fff',
+                }}>
+                Add New Address
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -512,5 +506,25 @@ const styles = StyleSheet.create({
     elevation: 4,
     marginBottom: 10,
     marginHorizontal: Sizes.fixPadding + 20,
+  },
+
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    paddingTop: 12,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    minHeight: 400,
+  },
+  barIcon: {
+    width: 60,
+    height: 5,
+    backgroundColor: '#bbb',
+    borderRadius: 3,
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 });
