@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 
 const propTypes = {
@@ -185,6 +186,7 @@ class CollapsingToolbar extends Component {
             <TouchableOpacity onPress={leftItemPress}>
               <View style={styles.left}>{leftItem}</View>
             </TouchableOpacity>
+            {/* <Text style={styles.center}>Title</Text> */}
             <TouchableOpacity onPress={rightItemPress}>
               <View style={styles.right}>{rightItem}</View>
             </TouchableOpacity>
@@ -240,6 +242,14 @@ const styles = StyleSheet.create({
   left: {
     top: 0,
     left: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  center: {
+    marginTop: 18,
+    color: Colors.whiteColor,
+    fontWeight: 'bold',
+    fontSize: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },

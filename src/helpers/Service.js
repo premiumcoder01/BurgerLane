@@ -56,7 +56,7 @@ const GetApi = async (url, data) => {
       },
     })
     .then(res => {
-      console.log('res', res.data);
+      // console.log('res', res.data);
       return res.data;
     })
     .catch(err => {

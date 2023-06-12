@@ -22,7 +22,7 @@ import Constants from '../../helpers/Constant';
 
 class RestaurantDetailScreen extends Component {
   state = {
-    restaurantDetails: {},
+    restaurantDetails: [],
     popularItems: [],
     productCategories: [],
     restroId: '11',
@@ -38,14 +38,17 @@ class RestaurantDetailScreen extends Component {
 
   restaurantDetails = () => {
     this.setState({loading: true});
-    console.log('restaurant details', this.props.route);
-
+    // console.log('restaurant detail', this.props.route.params);
+    let item_id = this.props.route?.params?.product_id;
+    let latitude = this.props.route.params.latitude;
+    let longitude = this.props.route.params.longitude;
     GetApi(
-      Constants.restaurantDetails +
-        `${this.props.route?.params?.restaurant_id}`,
+      Constants.restaurant +
+        `item_id=${item_id}&latitude=${latitude}&longitude=${longitude}`,
     ).then(
       async res => {
-        if (res.Status === 200) {
+        // console.log('restaurant details', res?.data?.Restaurant[0]);
+        if (res.status === 200) {
           this.setState({
             restaurantDetails: res?.data?.Restaurant[0],
             popularItems: res?.data?.popularItems?.data,
@@ -59,6 +62,30 @@ class RestaurantDetailScreen extends Component {
         console.log(err.response.data);
       },
     );
+
+    console.log(this.restaurantDetails, 'restaurant details');
+
+    // console.log('restaurant details', restaurantDetails);
+
+    // GetApi(
+    //   Constants.restaurantDetails +
+    //     `${this.props.route?.params?.restaurant_id}`,
+    // ).then(
+    //   async res => {
+    //     if (res.Status === 200) {
+    //       this.setState({
+    //         restaurantDetails: res?.data?.Restaurant[0],
+    //         popularItems: res?.data?.popularItems?.data,
+    //         productCategories: res?.data?.categories,
+    //       });
+    //     }
+    //     this.setState({loading: false});
+    //   },
+    //   err => {
+    //     this.setState({loading: false});
+    //     console.log(err.response.data);
+    //   },
+    // );
   };
 
   componentWillUnmount() {
@@ -163,7 +190,9 @@ class RestaurantDetailScreen extends Component {
           src={{
             uri: this.state.restaurantDetails?.image,
           }}
-          childrenMinHeight={720}>
+          childrenMinHeight={720}
+          
+          >
           <View style={{flex: 1, backgroundColor: Colors.primaryColor}}>
             <TabBarView
               props={this.props}
@@ -174,7 +203,7 @@ class RestaurantDetailScreen extends Component {
           </View>
         </CollapsingToolbar>
         <Snackbar
-          style={styles.snackBarStyle}
+          style={styles.snackBarStyle} 
           visible={this.state.showSnackBar}
           onDismiss={() => this.setState({showSnackBar: false})}>
           {!this.state.isFavourite

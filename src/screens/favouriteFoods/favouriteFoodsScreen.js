@@ -151,11 +151,11 @@ const FavouriteFoods = ({}) => {
                   marginLeft: Sizes.fixPadding - 8.0,
                   ...Fonts.grayColor14Medium,
                 }}>
-                {data.item.rating.toFixed(1)}
+                {/* {data.item.rating.toFixed(1)} */}
               </Text>
             </View>
             <Text style={{...Fonts.primaryColor20MediumBold}}>
-              ${data.item.amount.toFixed(1)}
+              {/* ${data.item.amount.toFixed(1)} */}
             </Text>
           </View>
         </View>
@@ -213,7 +213,7 @@ const FavouriteFoods = ({}) => {
         </View>
       ) : (
         <View style={{flex: 1}}>
-          <SwipeListView
+          {/* <SwipeListView
             data={favouriteFoods}
             renderItem={renderItem}
             renderHiddenItem={renderHiddenItem}
@@ -223,7 +223,7 @@ const FavouriteFoods = ({}) => {
               paddingTop: Sizes.fixPadding * 2.0,
             }}
             showsVerticalScrollIndicator={false}
-          />
+          /> */}
         </View>
       )}
       <Snackbar

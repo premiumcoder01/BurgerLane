@@ -84,7 +84,6 @@ const Discover = () => {
     );
   };
 
-
   const restaurantListCategory = async item => {
     let lat;
     let long;
@@ -368,10 +367,10 @@ const Discover = () => {
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate('RestaurantDetail', {
-                          details: item.item_id,
-                          restaurant_id: item.restaurant_id,
+                          product_id: item.item_id,
                           longitude: longitute,
                           latitude: latitude,
+                          isSelected: 1,
                         })
                       }
                       style={styles.allRestaurentsInfoWrapStyle}>

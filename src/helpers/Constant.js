@@ -29,6 +29,7 @@ const Constants = {
   get_address_detail: 'customer/get-address-detail',
   set_default_address: 'customer/set_default_address',
   getOfferRes: 'get-offer-restaurant/',
+  restaurant: 'customer/restaurant?',
   restaurantDetails: 'customer/restaurant?restaurant_id=',
   orderDetails: 'customer/cart-detail',
   popularList: 'customer/popular-item-see-all',

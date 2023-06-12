@@ -96,8 +96,8 @@ const Navigation = () => {
       <Stack.Screen
         name="RestaurantDetail"
         options={{headerShown: false}}
-        component={restaurantDetailScreen}
-        // component={RestaurantDetail}
+        // component={restaurantDetailScreen}
+        component={RestaurantDetail}
       />
       <Stack.Screen
         name="ConfirmOrder"

@@ -9,17 +9,18 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import { Colors } from '../constants/styles';
+import {Colors, Sizes} from '../constants/styles';
 import SafeArea from '../helpers/SafeArea';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const HEADER_EXPANDED_HEIGHT = 150;
+const HEADER_EXPANDED_HEIGHT = 200;
 const HEADER_COLLAPSED_HEIGHT = 56;
 
 const TITLE_EXPANDED_HEIGHT = 24;
 const TITLE_COLLAPSED_HEIGHT = 16;
 const {width: SCREEN_WIDTH} = Dimensions.get('screen');
 
-export default class CollapsibleToolbar extends Component {
+export default class Collapse extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,9 +66,11 @@ export default class CollapsibleToolbar extends Component {
           this.state.open ? this.props.headerColor : this.props.headerColorDark
         }
         bottomBarColor={
-          this.props.bottomBarColor ? this.props.bottomBarColor : Colors.primaryColor
+          this.props.bottomBarColor
+            ? this.props.bottomBarColor
+            : Colors.primaryColor
         }
-        statusBarStyle={this.state.open ? 'dark-content' : 'light-content'}>
+        statusBarStyle={this.state.open ? 'light-content' : 'light-content'}>
         <View style={styles.container}>
           <Animated.View
             onLayout={event => this.onLayout(event)}
@@ -85,7 +88,7 @@ export default class CollapsibleToolbar extends Component {
                 styles.headerTitle,
                 styles.maxHeader,
                 {
-                  color: Colors.primaryColor,
+                  color: Colors.whiteColor,
                   paddingLeft: headerSlide,
                   fontSize: headerTitleSize,
                   opacity: headerTitleOpacity,
@@ -95,10 +98,10 @@ export default class CollapsibleToolbar extends Component {
             </Animated.Text>
             <View style={styles.appBar}>
               <TouchableOpacity onPress={() => this.props.backPress()}>
-                <Image
-                  style={styles.backIcon}
-                  source={require('../assets/left-arrow.png')}
-                  resizeMode={'contain'}
+                <MaterialIcons
+                  name="arrow-back"
+                  size={25}
+                  color={Colors.whiteColor}
                 />
               </TouchableOpacity>
               {!this.state.open && (
@@ -115,15 +118,13 @@ export default class CollapsibleToolbar extends Component {
           </Animated.View>
           <ScrollView
             contentContainerStyle={styles.scrollContainer}
-            onScroll={Animated.event([
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}],
               {
-                nativeEvent: {
-                  contentOffset: {
-                    y: this.state.scrollY,
-                  },
-                },
+                useNativeDriver: false,
+                // listener: event => this.handleScroll(event),
               },
-            ])}
+            )}
             scrollEventThrottle={16}>
             {this.props.children}
           </ScrollView>
@@ -141,7 +142,7 @@ export default class CollapsibleToolbar extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primaryColor,
+    backgroundColor: Colors.whiteColor,
   },
   scrollContainer: {
     paddingTop: HEADER_EXPANDED_HEIGHT,
@@ -173,7 +174,8 @@ const styles = StyleSheet.create({
   minHeader: {
     fontSize: 16,
     paddingLeft: 16,
-    color: Colors.primaryColor,
+    color: Colors.whiteColor,
+    fontWeight: 'bold',
   },
   backIcon: {
     zIndex: 99,
@@ -181,10 +183,14 @@ const styles = StyleSheet.create({
     width: 20,
   },
   image: {
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     position: 'absolute',
+    top: 0,
+    backgroundColor: 'rgba(0,0,0,.2)',
+    left: 0,
     right: 0,
-    bottom: 0,
+    height: 200,
+    width: SCREEN_WIDTH,
   },
   appBar: {
     flexDirection: 'row',

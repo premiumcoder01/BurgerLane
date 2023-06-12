@@ -11,6 +11,7 @@ if (__DEV__) {
     'Non-serializable values were found in the navigation state.',
     'VirtualizedLists should never be nested inside plain ScrollViews',
     'Each child in a list should have a unique "key" prop.',
+    'Animated.event now requires a second argument for options at Collapse',
   ];
 
   const warn = console.warn;
