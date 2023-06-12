@@ -23,8 +23,11 @@ const {width} = Dimensions.get('screen');
 const Discover = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-  const [showAddressSheet, setShowAddressSheet] = useState(false);
   const [currentAddress, setCurrentAddress] = useState('');
+
+  const [longitute, setLongitute] = useState('');
+  const [latitude, setLatitute] = useState('');
+
   const [offerList, setOfferList] = useState([]);
   const [itemList, setItemList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
@@ -54,8 +57,8 @@ const Discover = () => {
     const formData = new FormData();
     formData.append('lat', lat);
     formData.append('long', long);
-    // formData.append('lat', '28.629341719747938');
-    // formData.append('long', '77.38402881349394');
+    setLongitute(long);
+    setLatitute(lat);
     setLoading(true);
     Post(Constants.home, formData).then(async res => {
       if (res.status === 200) {
@@ -81,6 +84,7 @@ const Discover = () => {
     );
   };
 
+
   const restaurantListCategory = async item => {
     let lat;
     let long;
@@ -93,8 +97,6 @@ const Discover = () => {
     formData.append('category_id', item.id);
     formData.append('latitude', lat);
     formData.append('longitude', long);
-    // formData.append('latitude', '28.629341719747938');
-    // formData.append('longitude', '77.38402881349394');
     Post(Constants.restaurantByCategory, formData).then(
       async res => {
         if (res.status === 200) {
@@ -199,8 +201,6 @@ const Discover = () => {
       </ScrollView>
     );
   };
-
-
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.primaryColor}}>
@@ -366,12 +366,13 @@ const Discover = () => {
                 renderItem={({item}) => {
                   return (
                     <TouchableOpacity
-                      onPress={() => restaurantListCategory(item)
-                        // navigation.navigate('RestaurantDetail', {
-                        //   details: item.item,
-                        //   from: 'ProductList',
-                        //   restaurant_id: item.restaurant_id,
-                        // })
+                      onPress={() =>
+                        navigation.navigate('RestaurantDetail', {
+                          details: item.item_id,
+                          restaurant_id: item.restaurant_id,
+                          longitude: longitute,
+                          latitude: latitude,
+                        })
                       }
                       style={styles.allRestaurentsInfoWrapStyle}>
                       <Image
@@ -406,7 +407,7 @@ const Discover = () => {
           </View>
         </ScrollView>
       </View>
-    
+
       <Modal
         onBackdropPress={() => setModalVisible(false)}
         onBackButtonPress={() => setModalVisible(false)}

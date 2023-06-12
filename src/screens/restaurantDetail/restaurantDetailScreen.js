@@ -38,10 +38,9 @@ class RestaurantDetailScreen extends Component {
 
   restaurantDetails = () => {
     this.setState({loading: true});
-    console.log(this.props.route);
+    console.log('restaurant details', this.props.route);
 
     GetApi(
-      //Constants.restaurantDetails + `${this.props.route?.params?.item?.id}`,
       Constants.restaurantDetails +
         `${this.props.route?.params?.restaurant_id}`,
     ).then(
@@ -200,7 +199,6 @@ const TabBarView = ({
     {key: 'second', title: 'Review'},
     {key: 'third', title: 'Information'},
   ]);
- 
 
   const layout = useWindowDimensions();
 
@@ -233,13 +231,13 @@ const TabBarView = ({
           indicatorStyle={{
             height: 2.5,
             marginLeft: index == 0 ? Sizes.fixPadding + 5.0 : 0.0,
-            backgroundColor: "transparent",
+            backgroundColor: 'transparent',
           }}
           tabStyle={{
             width: layout.width / 3.1,
             height: 60.0,
           }}
-          style={{backgroundColor: Colors.primaryColor,elevation:0}}
+          style={{backgroundColor: Colors.primaryColor, elevation: 0}}
           renderLabel={({route, focused, color}) => (
             <Text
               style={{
@@ -273,6 +271,5 @@ const styles = StyleSheet.create({
     bottom: -10.0,
   },
 });
-
 
 export default RestaurantDetailScreen;

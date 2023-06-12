@@ -20,7 +20,7 @@ import restaurantsListScreen from '../screens/restaurantsList/restaurantsListScr
 import searchScreen from '../screens/search/searchScreen';
 import splashScreen from '../screens/splashScreen';
 import TrackOrderScreen from '../screens/trackOrder/trackOrderScreen';
-import bottomTabBarScreen from '../components/bottomTabBarScreen';
+// import bottomTabBarScreen from '../components/bottomTabBarScreen';
 import DiscoverScreen from '../screens/discover/discoverScreen';
 import NearByScreen from '../screens/nearBy/nearByScreen';
 import OrderScreen from '../screens/order/orderScreen';
@@ -39,6 +39,7 @@ import InviteFriends from '../screens/InviteFriends/InviteFriends';
 import Vouchers from '../screens/Vouchers/Vouchers';
 import Language from '../screens/Language/Language';
 import BottomTab from '../components/BottomTab';
+import RestaurantDetail from '../screens/restaurantDetail/RestaurantDetail';
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -96,6 +97,7 @@ const Navigation = () => {
         name="RestaurantDetail"
         options={{headerShown: false}}
         component={restaurantDetailScreen}
+        // component={RestaurantDetail}
       />
       <Stack.Screen
         name="ConfirmOrder"

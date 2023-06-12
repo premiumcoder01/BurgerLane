@@ -97,6 +97,7 @@ class LoginScreen extends Component {
       this.setState({loading: true});
       Post(Constants.login, formData).then(
         async res => {
+          // console.log('first toke data', res);
           if (res.access_token !== undefined) {
             await AsyncStorage.setItem('userDetail', JSON.stringify(res));
             this.props.navigation.push('BottomTabBar');
