@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, View, Image, Alert} from 'react-native';
+import {ScrollView, StyleSheet, Text, View, Image, Alert, Linking} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {Dimensions} from 'react-native';
 import {Colors, Fonts, Sizes} from '../../constants/styles';
@@ -428,8 +428,9 @@ const Discover = () => {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setModalVisible(false);
-                navigation.navigate('AddDeliveryAddress');
+                // setModalVisible(false);
+                // navigation.navigate('AddDeliveryAddress');
+                Linking.openURL(`tel: 8448613996`)
               }}
               style={{
                 margin: 20,
@@ -496,7 +497,7 @@ const styles = StyleSheet.create({
   },
   allRestaurentImageStyle: {
     height: 150,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     borderTopLeftRadius: Sizes.fixPadding,
     borderTopRightRadius: Sizes.fixPadding,
   },

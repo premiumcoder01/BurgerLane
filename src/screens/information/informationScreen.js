@@ -9,8 +9,6 @@ const {width} = Dimensions.get('screen');
 const Information = restaurantDetails => {
   const [data, setData] = useState([]);
 
-
-
   return (
     <ScrollView style={styles.pageStyle}>
       {restaurantDetails == undefined ? (
@@ -39,7 +37,7 @@ const Information = restaurantDetails => {
                 restaurantDetails.restaurantDetails.description
               }></HTMLView> */}
           </View>
-          <View style={{padding: 30, borderRadius: 50}}>
+          <View style={{padding: 30, borderRadius: 50, overflow: 'hidden'}}>
             {restaurantDetails && (
               <MapView
                 style={styles.mapStyle}
@@ -62,7 +60,7 @@ const Information = restaurantDetails => {
                     longitude: 77.3648567,
                   }}
                   // onDragEnd={e => alert(JSON.stringify(e.nativeEvent.coordinate))}
-                  title={restaurantDetails.restaurantDetails.name}
+                  // title={restaurantDetails.restaurantDetails.name}
                   // description={restaurantDetails.restaurantDetails.description}
                 />
               </MapView>
@@ -78,7 +76,7 @@ const styles = StyleSheet.create({
   pageStyle: {
     borderTopLeftRadius: Sizes.fixPadding * 2.0,
     borderTopRightRadius: Sizes.fixPadding * 2.0,
-    backgroundColor: Colors.bodyBackColor,
+    backgroundColor: Colors.whiteColor,
     flex: 1,
   },
   mapStyle: {

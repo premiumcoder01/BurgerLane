@@ -13,6 +13,7 @@ import {useWindowDimensions} from 'react-native';
 import Products from '../products/productsScreen';
 import Review from '../review/reviewScreen';
 import Information from '../information/informationScreen';
+import ProductsData from '../products/ProductsData';
 
 const RestaurantDetail = props => {
   const navigation = useNavigation();
@@ -35,9 +36,11 @@ const RestaurantDetail = props => {
               `item_id=${item_id}&latitude=${latitude}&longitude=${longitude}`,
           ).then(
             res => {
-              console.log('restaurant details for order', res?.data);
+              console.log(
+                'restaurant details for order',
+                res?.data?.Restaurant,
+              );
               if (res.Status === 200) {
-                // console.log('first one');
                 setRestaurantData(res?.data?.Restaurant[0]);
                 setPopularItems(res?.data?.popularItems.data);
                 setProductCategories(res?.data?.categories);
@@ -53,7 +56,6 @@ const RestaurantDetail = props => {
           ).then(
             async res => {
               if (res.Status === 200) {
-                // console.log('second one');
                 setRestaurantData(res?.data?.Restaurant[0]);
                 setPopularItems(res?.data?.popularItems.data);
                 setProductCategories(res?.data?.categories);
@@ -71,7 +73,7 @@ const RestaurantDetail = props => {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: Colors.primaryColor}}>
       <CollapsingToolbar
         leftItem={
           <MaterialIcons
@@ -166,7 +168,7 @@ const TabBarView = ({props, restaurantDetails, popularItems, productList}) => {
   const layout = useWindowDimensions();
   const renderScene = ({route, jumpTo}) => {
     switch (route.key) {
-      case 'first':
+      case 'second':
         return (
           <Products
             props={props}
@@ -175,8 +177,15 @@ const TabBarView = ({props, restaurantDetails, popularItems, productList}) => {
             restroId={restaurantDetails?.id}
           />
         );
-      case 'second':
-        return <Review restaurantDetails={restaurantDetails} />;
+      case 'first':
+        return (
+          <ProductsData
+            props={props}
+            popularItemList={popularItems}
+            productList={productList}
+            restroId={restaurantDetails?.id}
+          />
+        );
       case 'third':
         return <Information restaurantDetails={restaurantDetails} />;
     }
@@ -187,7 +196,7 @@ const TabBarView = ({props, restaurantDetails, popularItems, productList}) => {
       renderScene={renderScene}
       onIndexChange={setIndex}
       swipeEnabled
-      style={{height: 1100, flex: 1}}
+      style={{flex: 1, height: 5500}}
       swipeVelocityImpact={0.2}
       gestureHandlerProps={{
         activeOffsetX: [-30, 30],

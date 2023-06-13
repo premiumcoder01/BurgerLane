@@ -930,7 +930,7 @@ const Products = ({props, popularItemList, productList, restroId}) => {
       <View
         style={{
           marginVertical: Sizes.fixPadding,
-          marginHorizontal: 10,
+          // marginHorizontal: 10,
         }}>
         <View
           style={{
