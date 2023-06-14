@@ -279,7 +279,7 @@ const Discover = () => {
                 {offerList.map(item => {
                   return (
                     <TouchableOpacity
-                      style={{marginHorizontal: 20}}
+                      style={{marginLeft: 25,marginRight:20}}
                       onPress={() =>
                         navigation.navigate('OfferList', {id: item?.id})
                       }>

@@ -36,10 +36,10 @@ const RestaurantDetail = props => {
               `item_id=${item_id}&latitude=${latitude}&longitude=${longitude}`,
           ).then(
             res => {
-              console.log(
-                'restaurant details for order',
-                res?.data?.Restaurant,
-              );
+              // console.log(
+              //   'restaurant details for order',
+              //   res?.data?.Restaurant,
+              // );
               if (res.Status === 200) {
                 setRestaurantData(res?.data?.Restaurant[0]);
                 setPopularItems(res?.data?.popularItems.data);

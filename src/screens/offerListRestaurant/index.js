@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Image, Text, TouchableOpacity, FlatList } from 'react-native';
-import { Fonts, Colors, Sizes, ToastAndroid } from '../../constants/styles';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, Image, Text, TouchableOpacity, FlatList} from 'react-native';
+import {Fonts, Colors, Sizes, ToastAndroid} from '../../constants/styles';
 import styles from './styles';
 import Spinner from '../../components/Spinner';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
-import { Post } from '../../helpers/Service';
+import {useNavigation} from '@react-navigation/native';
+import {Post} from '../../helpers/Service';
 import Constants from '../../helpers/Constant';
 
 const OfferListRestaurant = item => {
@@ -69,7 +69,7 @@ const OfferListRestaurant = item => {
       />
       <View style={styles.productContainer}>
         <View style={styles.rowContainer}>
-          <Text style={{ ...Fonts.blackColor16Medium }}>
+          <Text style={{...Fonts.blackColor16Medium}}>
             {item?.item?.restaurant?.name}
           </Text>
         </View>
@@ -85,13 +85,13 @@ const OfferListRestaurant = item => {
   );
 
   return (
-    <View style={{ flex: 1, padding: 30 }}>
+    <View style={{flex: 1, padding: 20, backgroundColor: Colors.whiteColor}}>
       <Spinner color={'#fff'} visible={state.loading} />
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="arrowleft" size={30} color="#000" />
         </TouchableOpacity>
-        <Text style={{ ...Fonts.blackColor22Medium }}>Restaurant List</Text>
+        <Text style={{...Fonts.blackColor22Medium}}>Restaurant List</Text>
         <View />
       </View>
 

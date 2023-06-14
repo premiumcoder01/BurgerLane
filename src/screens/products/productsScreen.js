@@ -138,6 +138,7 @@ const Products = ({props, popularItemList, productList, restroId}) => {
   const [loading, setloading] = useState(false);
 
   const [coffees, setCoffees] = useState(coffeeList);
+
   const productDetails = item => {
     setloading(true);
     const formData = new FormData();
@@ -389,14 +390,6 @@ const Products = ({props, popularItemList, productList, restroId}) => {
   function productAddOnList() {
     return productDetailsAddOns[0]?.product_add_on.map((item, index) => (
       <View>
-        {/* <Text
-              style={{
-                // marginLeft: Sizes.fixPadding,
-                ...Fonts.blackColor19Medium,
-              }}>
-              {item?.title}
-            </Text> */}
-
         <View style={styles.sizeTitleStyle}>
           <Text style={{...Fonts.grayColor16Medium}}>{item?.title}</Text>
           <Text style={{...Fonts.grayColor16Medium}}>Price</Text>
@@ -420,7 +413,6 @@ const Products = ({props, popularItemList, productList, restroId}) => {
       setAddOnPrice(addOnPrice + price);
       fruits.push(item_id);
     }
-
     setProductAddOnId(item_id);
     setProductAddOnListId(index_value);
     setProductAddOnIdArray(fruits);
@@ -436,22 +428,13 @@ const Products = ({props, popularItemList, productList, restroId}) => {
             style={{
               paddingHorizontal: Sizes.fixPadding,
             }}>
-            {/* Array code  */}
-
             <View style={styles.sizesWrapStyle}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <TouchableOpacity
-                  activeOpacity={0.9}
-                  // onPress={() => {
-                  //   setProductAddOnId(item.id);
-                  //   setProductAddOnListId(index_value);
-                  //   setProductAddOnIdArray(item.id);
-                  // }}
                   onPress={() => {
                     setAddOnDetail(index_value, item.id, parseInt(item.price));
                   }}
                   style={{
-                    // marginLeft: Sizes.fixPadding,
                     ...styles.radioButtonStyle,
                     backgroundColor: productAddOnIdArray.includes(item.id)
                       ? Colors.primaryColor
@@ -472,18 +455,9 @@ const Products = ({props, popularItemList, productList, restroId}) => {
                   }}>
                   {item?.title}
                 </Text>
-                {/* <Text
-              style={{
-                marginLeft: Sizes.fixPadding,
-                ...Fonts.grayColor14Medium,
-              }}>
-              ({contain})
-            </Text> */}
               </View>
               <Text style={{...Fonts.blackColor16Medium}}>${item?.price}</Text>
             </View>
-
-            {/* end array code  */}
           </View>
         ))
       : productDetailsAddOns[0]?.product_add_on[
@@ -493,22 +467,14 @@ const Products = ({props, popularItemList, productList, restroId}) => {
             style={{
               paddingHorizontal: Sizes.fixPadding,
             }}>
-            {/* Array code  */}
-
             <View style={styles.sizesWrapStyle}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <TouchableOpacity
                   activeOpacity={0.9}
-                  // onPress={() => {
-                  //   setProductAddOnId(item.id);
-                  //   setProductAddOnListId(index_value);
-                  //   setProductAddOnIdArray(item.id);
-                  // }}
                   onPress={() => {
                     setAddOnDetail(index_value, item.id, parseInt(item.price));
                   }}
                   style={{
-                    // marginLeft: Sizes.fixPadding,
                     ...styles.radioButtonStyle,
                     backgroundColor:
                       productAddOnId == item.id
@@ -530,18 +496,9 @@ const Products = ({props, popularItemList, productList, restroId}) => {
                   }}>
                   {item?.title}
                 </Text>
-                {/* <Text
-              style={{
-                marginLeft: Sizes.fixPadding,
-                ...Fonts.grayColor14Medium,
-              }}>
-              ({contain})
-            </Text> */}
               </View>
               <Text style={{...Fonts.blackColor16Medium}}>${item?.price}</Text>
             </View>
-
-            {/* end array code  */}
           </View>
         ));
   }
