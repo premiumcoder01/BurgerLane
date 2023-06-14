@@ -16,21 +16,22 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Post} from '../../helpers/Service';
 import Constants from '../../helpers/Constant';
 import Modal from 'react-native-modal';
+import Spinner from '../../components/Spinner';
+import {useNavigation} from '@react-navigation/native';
 
 const fruits = [];
 
 const ProductsData = ({popularItemList, productList, restroId}) => {
+  const navigation = useNavigation();
 
   const [isModalVisible, setModalVisible] = useState(false);
-  const [cartData, setCartData] = useState([]);
-  const [qty, setQty] = useState('');
-  const [selectOptions, setSelectOptions] = useState([]);
-  const [selectSize, setSelectSize] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [sizeOptionPrice, setSizeOptionPrice] = useState(0);
-  const [optionsPrice, setOptionsPrice] = useState(0);
-
+  const [productDetailsAddOns, setProductDetailsAddOns] = useState([]);
+  const [productAddOnId, setProductAddOnId] = useState(null);
   const [productAddOnIdArray, setProductAddOnIdArray] = useState([]);
+  const [addOnPrice, setAddOnPrice] = useState(0);
+  const [qty, setQty] = useState(0);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -46,7 +47,6 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
           async res => {
             if (res.status === 200) {
               const updatedItem = {...item, isFavourite: !item.isFavourite};
-              // console.log(updatedItem);
               return updatedItem;
             }
           },
@@ -58,18 +58,23 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
     });
     return newList;
   };
+
   const addItem = item => {
+    setLoading(true);
     const formData = new FormData();
     formData.append('item_id', item?.id);
     Post(Constants.productDetails, formData).then(
       async res => {
+        setLoading(false);
         if (res.Status === 200) {
           res?.data?.product_details.map(item => {
             item.qty = 1;
           });
-          setCartData(res?.data?.product_details);
+          setProductDetailsAddOns(res.data?.product_details);
+          setProductAddOnId(null);
+          setProductAddOnIdArray([]);
+          setAddOnPrice(0);
           setQty(res?.data?.product_details[0].qty);
-          // setTotalPrice(res?.data?.product_details[0].price);
           setModalVisible(true);
         }
       },
@@ -79,177 +84,120 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
     );
   };
 
-  const handleAddItem = () => {
+  const addToCart = () => {
     const formData = new FormData();
-    formData.append('item_id', cartData[0]?.id);
+    formData.append('item_id', productDetailsAddOns[0]?.id);
     formData.append('restaurant_id', restroId);
     formData.append('quantity', qty);
-    formData.append('add_on_item', fruits);
+    formData.append('add_on_item', JSON.stringify(productAddOnIdArray));
     Post(Constants.addToCart, formData).then(
       async res => {
         if (res.Status === '200') {
-          console.log(res);
-          // setShowBottomSheet(false);
-          // navigation.navigate('ConfirmOrder');
+          setModalVisible(false);
+          navigation.navigate('ConfirmOrder');
         }
       },
       err => {
-        console.log(err);
+        console.log(err.response.data);
       },
     );
   };
 
-  const OptionList = ({options, selectedOption, onSelectOption}) => {
-    return (
-      <View>
-        {options.map(option => (
-          <Pressable
-            style={{
-              marginBottom: 10,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-            key={option.id}
-            onPress={() => {
-              onSelectOption(option);
-            }}>
-            <Text
-              style={{
-                ...Fonts.blackColor15Regular,
-                fontWeight:
-                  selectedOption && selectedOption.id === option.id
-                    ? 'bold'
-                    : 'normal',
-              }}>
-              {option.title}
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={{
-                  ...Fonts.blackColor15Regular,
-                  fontWeight:
-                    selectedOption && selectedOption.id === option.id
-                      ? 'bold'
-                      : 'normal',
-                  marginRight: 10,
-                }}>
-                $ {option.price}
-              </Text>
-              <MaterialCommunityIcons
-                name={
-                  selectedOption && selectedOption.id === option.id
-                    ? 'checkbox-marked'
-                    : 'checkbox-blank-outline'
-                }
-                size={18}
-                color={
-                  selectedOption && selectedOption.id === option.id
-                    ? Colors.primaryColor
-                    : Colors.grayColor
-                }
-              />
-            </View>
-          </Pressable>
-        ))}
-      </View>
-    );
-  };
-  const SizeList = ({options, selectedSize, onSelectSize}) => {
-    return (
-      <View>
-        {options.map(option => (
-          <Pressable
-            style={{
-              marginBottom: 10,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-            key={option.id}
-            onPress={() => {
-              onSelectSize(option);
-            }}>
-            <Text
-              style={{
-                ...Fonts.blackColor15Regular,
-                fontWeight:
-                  selectedSize && selectedSize.id === option.id
-                    ? 'bold'
-                    : 'normal',
-              }}>
-              {option.title}
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={{
-                  ...Fonts.blackColor15Regular,
-                  fontWeight:
-                    selectedSize && selectedSize.id === option.id
-                      ? 'bold'
-                      : 'normal',
-                  marginRight: 10,
-                }}>
-                $ {option.price}
-              </Text>
-              <MaterialCommunityIcons
-                name={
-                  selectedSize && selectedSize.id === option.id
-                    ? 'checkbox-marked'
-                    : 'checkbox-blank-outline'
-                }
-                size={18}
-                color={
-                  selectedSize && selectedSize.id === option.id
-                    ? Colors.primaryColor
-                    : Colors.grayColor
-                }
-              />
-            </View>
-          </Pressable>
-        ))}
-      </View>
-    );
-  };
-
-  const productAddOnListArray = (index_value, is_multiple) => {
-    const onSelectOption = option => {
-      if (selectOptions && selectOptions.id === option.id) {
-        // If the same option is selected again, unselect it
-        setSelectOptions(null);
-        setOptionsPrice(0);
-      } else {
-        setSelectOptions(option);
-        fruits.push(option.id);
-        setOptionsPrice(parseInt(option.price));
+  function setAddOnDetail(index_value, item_id, price) {
+    if (fruits.includes(item_id)) {
+      setAddOnPrice(addOnPrice - price);
+      for (var i = fruits.length - 1; i >= 0; i--) {
+        if (fruits[i] === item_id) {
+          fruits.splice(i, 1);
+        }
       }
-    };
+    } else {
+      setAddOnPrice(addOnPrice + price);
+      fruits.push(item_id);
+    }
+    setProductAddOnId(item_id);
+    setProductAddOnIdArray(fruits);
+  }
 
-    const onSelectSelectSize = option => {
-      if (selectSize && selectSize.id === option.id) {
-        // If the same option is selected again, unselect it
-        setSelectSize(null);
-        setSizeOptionPrice(0);
-      } else {
-        setSelectSize(option);
-        setSizeOptionPrice(parseInt(option.price));
-      }
-    };
+  // console.log(productAddOnIdArray, '---', productAddOnId);
 
-    return is_multiple == 'true' ? (
-      <OptionList
-        options={cartData[0]?.product_add_on[index_value].product_add_on_option}
-        selectedOption={selectOptions}
-        onSelectOption={onSelectOption}
-      />
-    ) : (
-      <SizeList
-        options={cartData[0]?.product_add_on[index_value].product_add_on_option}
-        selectedSize={selectSize}
-        onSelectSize={onSelectSelectSize}
-      />
-    );
-  };
+  function productAddOnListArray(index_value, is_multiple) {
+    return is_multiple == 'true'
+      ? productDetailsAddOns[0]?.product_add_on[
+          index_value
+        ]?.product_add_on_option.map((item, index) => (
+          <View>
+            <View style={styles.sizesWrapStyle}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setAddOnDetail(index_value, item.id, parseInt(item.price));
+                  }}
+                  style={{
+                    ...styles.radioButtonStyle,
+                    backgroundColor: productAddOnIdArray.includes(item.id)
+                      ? Colors.primaryColor
+                      : Colors.whiteColor,
+                  }}>
+                  {productAddOnIdArray.includes(item.id) ? (
+                    <MaterialIcons
+                      name="done"
+                      size={18}
+                      color={Colors.whiteColor}
+                    />
+                  ) : null}
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    marginLeft: Sizes.fixPadding,
+                    ...Fonts.blackColor16Medium,
+                  }}>
+                  {item?.title}
+                </Text>
+              </View>
+              <Text style={{...Fonts.blackColor16Medium}}>$ {item?.price}</Text>
+            </View>
+          </View>
+        ))
+      : productDetailsAddOns[0]?.product_add_on[
+          index_value
+        ]?.product_add_on_option.map((item, index) => (
+          <View>
+            <View style={styles.sizesWrapStyle}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() => {
+                    setAddOnDetail(index_value, item.id, parseInt(item.price));
+                  }}
+                  style={{
+                    ...styles.radioButtonStyle,
+                    backgroundColor:
+                      productAddOnId == item.id
+                        ? Colors.primaryColor
+                        : Colors.whiteColor,
+                  }}>
+                  {productAddOnId == item.id ? (
+                    <MaterialIcons
+                      name="done"
+                      size={18}
+                      color={Colors.whiteColor}
+                    />
+                  ) : null}
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    marginLeft: Sizes.fixPadding,
+                    ...Fonts.blackColor16Medium,
+                  }}>
+                  {item?.title}
+                </Text>
+              </View>
+              <Text style={{...Fonts.blackColor16Medium}}>$ {item?.price}</Text>
+            </View>
+          </View>
+        ));
+  }
 
   return (
     <ScrollView
@@ -261,6 +209,7 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
         borderTopRightRadius: Sizes.fixPadding * 2.0,
         paddingVertical: 20,
       }}>
+      <Spinner color={'#fff'} visible={loading} />
       {/* popular item */}
       <View style={{marginHorizontal: 20}}>
         <Text style={{...Fonts.blackColor19Medium}}>Popular Items</Text>
@@ -476,7 +425,8 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
                             borderColor: Colors.primaryColor,
                             position: 'absolute',
                             bottom: -20,
-                          }}>
+                          }}
+                          onPress={() => addItem(item)}>
                           <Text
                             style={{
                               ...Fonts.primaryColor16Medium,
@@ -520,7 +470,7 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
         backdropTransitionOutTiming={600}
         style={styles.modal}>
         <View style={styles.modalContent}>
-          {/* <View
+          <View
             style={{
               padding: 10,
               backgroundColor: Colors.whiteColor,
@@ -536,7 +486,7 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
-                  source={{uri: cartData[0]?.image}}
+                  source={{uri: productDetailsAddOns[0]?.image}}
                   resizeMode="contain"
                   style={{height: 60, width: 60, borderRadius: 10}}
                 />
@@ -546,7 +496,7 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
                     marginLeft: 20,
                     fontWeight: 'bold',
                   }}>
-                  {cartData[0]?.name}
+                  {productDetailsAddOns[0]?.name}
                 </Text>
               </View>
               <View
@@ -563,9 +513,9 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
                   name="remove"
                   color={Colors.blackColor}
                   size={18}
-                  onPress={() =>
-                    qty < 2 ? setModalVisible(false) : setQty(qty - 1)
-                  }
+                  onPress={() => {
+                    qty < 2 ? setModalVisible(false) : setQty(qty - 1);
+                  }}
                 />
                 <Text
                   style={{...Fonts.blackColor15Regular, marginHorizontal: 10}}>
@@ -580,6 +530,8 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
               </View>
             </View>
           </View>
+          {/* addon */}
+
           <View
             style={{
               margin: 10,
@@ -592,7 +544,7 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
             <Text style={{...Fonts.blackColor15Regular, fontWeight: 'bold'}}>
               Add Ons
             </Text>
-            {cartData[0]?.product_add_on.map((item, index) => {
+            {productDetailsAddOns[0]?.product_add_on.map((item, index) => {
               return (
                 <View style={{marginTop: 20}}>
                   <Text
@@ -603,31 +555,34 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
                     }}>
                     {item.title}
                   </Text>
-                 
+                  {/* Array code  */}
                   {productAddOnListArray(index, item?.is_multiple)}
+                  {/* end array code  */}
                 </View>
               );
             })}
           </View>
+
           <TouchableOpacity
             style={{
               padding: 10,
               paddingVertical: 15,
               backgroundColor: Colors.primaryColor,
-              borderRadius: 20,
+              borderRadius: 10,
               margin: 10,
             }}
-            onPress={() => handleAddItem()}>
+            onPress={() => {
+              addToCart();
+            }}>
             <Text
               style={{
                 ...Fonts.whiteColor16Regular,
                 textAlign: 'center',
                 fontWeight: 'bold',
               }}>
-              Add Items $
-              {cartData[0]?.price * qty + (sizeOptionPrice + optionsPrice)}
+              Add Items $ {productDetailsAddOns[0]?.price * qty + addOnPrice}
             </Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </Modal>
     </ScrollView>
@@ -655,5 +610,21 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     alignItems: 'center',
     alignSelf: 'center',
+  },
+  radioButtonStyle: {
+    width: 20.0,
+    height: 20.0,
+    borderRadius: 13.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: Colors.grayColor,
+    borderWidth: 1.0,
+  },
+
+  sizesWrapStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Sizes.fixPadding,
   },
 });
