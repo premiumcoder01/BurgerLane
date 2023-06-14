@@ -162,6 +162,7 @@ const Products = ({props, popularItemList, productList, restroId}) => {
     );
   };
 
+
   const addToCart = () => {
     const formData = new FormData();
     formData.append('item_id', productDetailsAddOns[0]?.id);
@@ -416,7 +417,7 @@ const Products = ({props, popularItemList, productList, restroId}) => {
     setProductAddOnId(item_id);
     setProductAddOnListId(index_value);
     setProductAddOnIdArray(fruits);
-    console.log(productAddOnIdArray);
+    console.log('kuch to mila', productAddOnIdArray);
   }
 
   function productAddOnListArray(index_value, is_multiple) {

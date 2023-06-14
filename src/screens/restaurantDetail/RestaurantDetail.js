@@ -14,12 +14,14 @@ import Products from '../products/productsScreen';
 import Review from '../review/reviewScreen';
 import Information from '../information/informationScreen';
 import ProductsData from '../products/ProductsData';
+import Spinner from '../../components/Spinner';
 
 const RestaurantDetail = props => {
   const navigation = useNavigation();
   const [restaurantData, setRestaurantData] = useState([]);
   const [popularItems, setPopularItems] = useState([]);
   const [productCategories, setProductCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [isFavourite, setIsFavourite] = useState(false);
   const [showSnackBar, setShowSnackBar] = useState(false);
@@ -29,6 +31,7 @@ const RestaurantDetail = props => {
   let longitude = props.route.params.longitude;
 
   const restaurantDetails = () => {
+    setLoading(true);
     {
       props.route?.params?.isSelected
         ? GetApi(
@@ -36,14 +39,11 @@ const RestaurantDetail = props => {
               `item_id=${item_id}&latitude=${latitude}&longitude=${longitude}`,
           ).then(
             res => {
-              // console.log(
-              //   'restaurant details for order',
-              //   res?.data?.Restaurant,
-              // );
               if (res.Status === 200) {
                 setRestaurantData(res?.data?.Restaurant[0]);
                 setPopularItems(res?.data?.popularItems.data);
                 setProductCategories(res?.data?.categories);
+                setLoading(false);
               }
             },
             err => {
@@ -59,6 +59,7 @@ const RestaurantDetail = props => {
                 setRestaurantData(res?.data?.Restaurant[0]);
                 setPopularItems(res?.data?.popularItems.data);
                 setProductCategories(res?.data?.categories);
+                setLoading(false);
               }
             },
             err => {
@@ -74,6 +75,7 @@ const RestaurantDetail = props => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.primaryColor}}>
+      <Spinner color={'#fff'} visible={loading} />
       <CollapsingToolbar
         leftItem={
           <MaterialIcons
