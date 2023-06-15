@@ -428,9 +428,9 @@ const Discover = () => {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                // setModalVisible(false);
-                // navigation.navigate('AddDeliveryAddress');
-                Linking.openURL(`tel: 8448613996`)
+                setModalVisible(false);
+                navigation.navigate('AddDeliveryAddress');
+                // Linking.openURL(`tel: 8448613996`)
               }}
               style={{
                 margin: 20,

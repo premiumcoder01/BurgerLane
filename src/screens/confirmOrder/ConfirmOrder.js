@@ -21,10 +21,13 @@ import Spinner from '../../components/Spinner';
 import {useNavigation} from '@react-navigation/native';
 import MapView, {Marker} from 'react-native-maps';
 import Lottie from 'lottie-react-native';
+import Modal from 'react-native-modal';
+import paymentData from './paymentData';
 
 const {width} = Dimensions.get('screen');
 
 const ConfirmOrder = () => {
+  console.log(paymentData);
   const gst = 30;
   const deliveryCharge = 100;
   const navigation = useNavigation();
@@ -33,7 +36,13 @@ const ConfirmOrder = () => {
   const [totalAmount, setTotalAmount] = useState('');
   const [couponsCode, setCouponCode] = useState('');
   const [orderId, setOrderId] = useState('');
+  const [select, setSelect] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   const orderDetails = () => {
     setLoading(true);
@@ -61,6 +70,13 @@ const ConfirmOrder = () => {
   useEffect(() => {
     orderDetails();
   }, []);
+
+  const handleCheckout = () => {
+    setModalVisible(true);
+    setTimeout(() => {
+      navigation.navigate('BottomTabBar');
+    }, 3000);
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.bodyBackColor}}>
@@ -371,6 +387,7 @@ const ConfirmOrder = () => {
               borderBottomWidth: 0.5,
               borderColor: Colors.grayColor,
               height: 40,
+              color: Colors.blackColor,
             }}
           />
           <TouchableOpacity
@@ -508,30 +525,125 @@ const ConfirmOrder = () => {
             </Text>
           </View>
         </View>
-      </ScrollView>
-      
-      {/* Pay button */}
-      <TouchableOpacity
-        style={{
-          padding: 10,
-          backgroundColor: Colors.primaryColor,
-          borderRadius: 10,
-          marginHorizontal: 20,
-          marginBottom: 10,
-        }}>
-        <Text
+
+        {/* Preferred Payment */}
+        <View
           style={{
-            color: Colors.whiteColor,
-            ...Fonts.whiteColor15Medium,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            textTransform: 'uppercase',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: 20,
           }}>
-          Place Order
-        </Text>
-      </TouchableOpacity>
-      {/* checkout */}
-      
+          <View
+            style={{width: 80, height: 1, backgroundColor: Colors.grayColor}}
+          />
+          <Text style={{...Fonts.grayColor16Medium, textAlign: 'center'}}>
+            Preferred Payment
+          </Text>
+          <View
+            style={{width: 80, height: 1, backgroundColor: Colors.grayColor}}
+          />
+        </View>
+        <View
+          style={{
+            margin: 20,
+            padding: 10,
+            backgroundColor: Colors.whiteColor,
+            borderRadius: 10,
+            elevation: 4,
+          }}>
+          {paymentData.map((item, index) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 10,
+                }}>
+                <MaterialIcons
+                  name={
+                    select === index
+                      ? 'radio-button-checked'
+                      : 'radio-button-unchecked'
+                  }
+                  color={
+                    select === index ? Colors.primaryColor : Colors.grayColor
+                  }
+                  size={24}
+                  onPress={() => setSelect(index)}
+                />
+                <View
+                  style={{
+                    marginRight: 10,
+                  }}>
+                  <Image
+                    source={item.image}
+                    style={{height: 50, width: 50, borderRadius: 100}}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text style={{...Fonts.blackColor15Medium}}>{item.title}</Text>
+              </View>
+            );
+          })}
+        </View>
+
+        {/* Pay button */}
+        <TouchableOpacity
+          style={{
+            padding: 10,
+            backgroundColor: Colors.primaryColor,
+            borderRadius: 10,
+            marginHorizontal: 20,
+            marginBottom: 10,
+          }}
+          onPress={() => handleCheckout()}>
+          <Text
+            style={{
+              color: Colors.whiteColor,
+              ...Fonts.whiteColor15Medium,
+              fontWeight: 'bold',
+              textAlign: 'center',
+              textTransform: 'uppercase',
+            }}>
+            Place Order
+          </Text>
+        </TouchableOpacity>
+        <Modal
+          onBackButtonPress={() => setModalVisible(false)}
+          isVisible={isModalVisible}
+          swipeDirection="down"
+          onSwipeComplete={toggleModal}
+          animationIn="fadeIn"
+          animationOut="slideOutDown"
+          animationInTiming={600}
+          backdropOpacity={0.5}
+          animationOutTiming={600}
+          backdropTransitionInTiming={600}
+          backdropTransitionOutTiming={600}
+          style={{
+            flex: 1,
+            margin: 0,
+          }}>
+          <View
+            style={{
+              backgroundColor: Colors.primaryColor,
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Lottie
+              source={require('../../../assets/images/thanks.json')}
+              autoPlay
+              loop
+              style={{height: 150, width: 150}}
+            />
+            <Text style={{...Fonts.whiteColor22Medium}}>
+              Your order has been placed..
+            </Text>
+          </View>
+        </Modal>
+      </ScrollView>
     </SafeAreaView>
   );
 };
