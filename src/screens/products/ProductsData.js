@@ -37,6 +37,8 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
     setModalVisible(!isModalVisible);
   };
 
+  console.log(productDetailsAddOns[0]?.product_add_on.length);
+
   const handlePopularItemsUpdate = ({id, restaurant_id}) => {
     const newList = popularItemList.map(item => {
       if (item.id === id) {
@@ -241,28 +243,9 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: 5,
                   backgroundColor: Colors.whiteColor,
                   paddingBottom: 20,
                 }}>
-                <View style={{width: 130}}>
-                  <Text style={{...Fonts.blackColor15Medium}}>{item.name}</Text>
-                  <Text
-                    style={{
-                      ...Fonts.grayColor14Medium,
-                      fontSize: 12,
-                      marginBottom: 10,
-                    }}>
-                    ({item.cat_name})
-                  </Text>
-                  <Text
-                    style={{
-                      ...Fonts.blackColor14Regular,
-                      fontWeight: 'bold',
-                    }}>
-                    $ {item.price}
-                  </Text>
-                </View>
                 <View
                   style={{
                     position: 'relative',
@@ -323,6 +306,24 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
                       }
                     />
                   </TouchableOpacity>
+                </View>
+                <View style={{width: 130}}>
+                  <Text style={{...Fonts.blackColor15Medium}}>{item.name}</Text>
+                  <Text
+                    style={{
+                      ...Fonts.grayColor14Medium,
+                      fontSize: 12,
+                      marginBottom: 10,
+                    }}>
+                    ({item.cat_name})
+                  </Text>
+                  <Text
+                    style={{
+                      ...Fonts.blackColor14Regular,
+                      fontWeight: 'bold',
+                    }}>
+                    $ {item.price}
+                  </Text>
                 </View>
               </View>
             );
@@ -531,37 +532,38 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
             </View>
           </View>
           {/* addon */}
-
-          <View
-            style={{
-              margin: 10,
-              marginTop: 20,
-              padding: 10,
-              backgroundColor: Colors.whiteColor,
-              elevation: 3,
-              borderRadius: 10,
-            }}>
-            <Text style={{...Fonts.blackColor15Regular, fontWeight: 'bold'}}>
-              Add Ons
-            </Text>
-            {productDetailsAddOns[0]?.product_add_on.map((item, index) => {
-              return (
-                <View style={{marginTop: 20}}>
-                  <Text
-                    style={{
-                      ...Fonts.blackColor14Regular,
-                      marginBottom: 10,
-                      fontWeight: 'bold',
-                    }}>
-                    {item.title}
-                  </Text>
-                  {/* Array code  */}
-                  {productAddOnListArray(index, item?.is_multiple)}
-                  {/* end array code  */}
-                </View>
-              );
-            })}
-          </View>
+          {productDetailsAddOns[0]?.product_add_on.length !== 0 ? (
+            <View
+              style={{
+                margin: 10,
+                marginTop: 20,
+                padding: 10,
+                backgroundColor: Colors.whiteColor,
+                elevation: 3,
+                borderRadius: 10,
+              }}>
+              <Text style={{...Fonts.blackColor15Regular, fontWeight: 'bold'}}>
+                Add Ons
+              </Text>
+              {productDetailsAddOns[0]?.product_add_on.map((item, index) => {
+                return (
+                  <View style={{marginTop: 20}}>
+                    <Text
+                      style={{
+                        ...Fonts.blackColor14Regular,
+                        marginBottom: 10,
+                        fontWeight: 'bold',
+                      }}>
+                      {item.title}
+                    </Text>
+                    {/* Array code  */}
+                    {productAddOnListArray(index, item?.is_multiple)}
+                    {/* end array code  */}
+                  </View>
+                );
+              })}
+            </View>
+          ) : null}
 
           <TouchableOpacity
             style={{

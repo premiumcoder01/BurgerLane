@@ -170,15 +170,6 @@ const TabBarView = ({props, restaurantDetails, popularItems, productList}) => {
   const layout = useWindowDimensions();
   const renderScene = ({route, jumpTo}) => {
     switch (route.key) {
-      case 'second':
-        return (
-          <Products
-            props={props}
-            popularItemList={popularItems}
-            productList={productList}
-            restroId={restaurantDetails?.id}
-          />
-        );
       case 'first':
         return (
           <ProductsData
@@ -188,6 +179,8 @@ const TabBarView = ({props, restaurantDetails, popularItems, productList}) => {
             restroId={restaurantDetails?.id}
           />
         );
+      case 'second':
+        return <Review restaurantDetails={restaurantDetails} />;
       case 'third':
         return <Information restaurantDetails={restaurantDetails} />;
     }
