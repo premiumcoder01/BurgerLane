@@ -199,6 +199,7 @@ export const Colors = {
   primaryColor: '#F2647C',
   bodyBackColor: '#F4F4F4',
   grayColor: '#9E9E9E',
+  green: '#00FF00',
   darkPrimaryColor: '#CA445D',
   ratingColor: '#CDDC39',
   orangeRatingColor: '#FF9800',

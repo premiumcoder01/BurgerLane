@@ -40,6 +40,7 @@ import Vouchers from '../screens/Vouchers/Vouchers';
 import Language from '../screens/Language/Language';
 import BottomTab from '../components/BottomTab';
 import RestaurantDetail from '../screens/restaurantDetail/RestaurantDetail';
+import ConfirmOrder from '../screens/confirmOrder/ConfirmOrder';
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -102,7 +103,8 @@ const Navigation = () => {
       <Stack.Screen
         name="ConfirmOrder"
         options={{headerShown: false}}
-        component={confirmOrderScreen}
+        // component={confirmOrderScreen}
+        component={ConfirmOrder}
       />
       <Stack.Screen name="TrackOrder" component={TrackOrderScreen} />
       <Stack.Screen

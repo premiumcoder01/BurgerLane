@@ -364,15 +364,6 @@ class ConfirmOrderScreen extends Component {
             </Text>
           </View>
         ))}
-        {/* End of add on list  */}
-        {/* <View style={{ marginTop: Sizes.fixPadding, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Text style={{ ...Fonts.blackColor16Medium }}>
-                        Ship Fee (2.4 Km)
-                    </Text>
-                    <Text style={{ ...Fonts.blackColor16Medium }}>
-                        $1.3
-                    </Text>
-                </View> */}
         <View
           style={{
             marginVertical: Sizes.fixPadding + 2.0,

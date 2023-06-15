@@ -101,7 +101,7 @@ const RestaurantDetail = props => {
           />
         }
         element={
-          <View>
+          <View style={{width: 300}}>
             <Text style={{...Fonts.whiteColor22Medium}}>
               {restaurantData?.name}
             </Text>
