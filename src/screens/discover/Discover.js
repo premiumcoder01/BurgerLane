@@ -13,7 +13,7 @@ import Constants from '../../helpers/Constant';
 import {Post} from '../../helpers/Service';
 import Geolocation from '@react-native-community/geolocation';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {FlatList} from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -21,8 +21,12 @@ const {width} = Dimensions.get('screen');
 
 const allItems = [];
 
-const Discover = () => {
+const Discover = props => {
   const navigation = useNavigation();
+
+  const data = useRoute();
+  console.log('location mil gya', data);
+
   const [loading, setLoading] = useState(false);
   const [currentAddress, setCurrentAddress] = useState('');
 
@@ -75,7 +79,6 @@ const Discover = () => {
     setLoading(true);
     Post(Constants.home, formData).then(async res => {
       if (res.status === 200) {
-        console.log('all items', res?.data?.item_list?.data);
         setItemList(res?.data?.item_list?.data);
         setCurrentAddress(res?.data?.current_location);
         setCategoryList(res?.data?.categories?.data);
@@ -84,8 +87,6 @@ const Discover = () => {
       }
     });
   };
-
-  console.log(latitude, longitute);
 
   const OfferList = () => {
     Post(Constants.offerList).then(
@@ -132,7 +133,6 @@ const Discover = () => {
     setLoading(true);
     Post(Constants.set_default_address, formData).then(async res => {
       if (res.status === 200) {
-        console.log('new address', res);
         setCurrentAddress(res?.data?.city);
         setModalVisible(false);
         setLoading(false);
@@ -141,8 +141,13 @@ const Discover = () => {
   };
 
   useEffect(() => {
-    Home();
-    OfferList();
+    const willFocusSubscription = props.navigation.addListener('focus', () => {
+      Home();
+      OfferList();
+    });
+    return () => {
+      willFocusSubscription;
+    };
   }, []);
 
   const handlePopularItemsUpdate = ({id, restaurant_id}) => {
@@ -252,7 +257,6 @@ const Discover = () => {
           res?.data?.product_details.map(item => {
             item.qty = 1;
           });
-          console.log('responces on main screen', res.data);
           setProductDetailsAddOns(res.data?.product_details);
           setProductAddOnId(null);
           setProductAddOnIdArray([]);
@@ -276,7 +280,6 @@ const Discover = () => {
     Post(Constants.addToCart, formData).then(
       async res => {
         if (res.Status === '200') {
-          console.log('confirm order');
           setIsCartModal(false);
           navigation.navigate('ConfirmOrder');
         }
@@ -591,6 +594,7 @@ const Discover = () => {
                           style={{
                             ...Fonts.blackColor14Regular,
                             fontWeight: 'bold',
+                            alignSelf: 'center',
                           }}>
                           {item?.name}
                         </Text>
@@ -600,6 +604,8 @@ const Discover = () => {
                             marginTop: Sizes.fixPadding,
                             ...Fonts.grayColor14Medium,
                             fontWeight: 'bold',
+                            fontSize: 12,
+                            alignSelf: 'center',
                           }}>
                           Price : {item?.price}
                         </Text>
@@ -657,7 +663,6 @@ const Discover = () => {
               onPress={() => {
                 setModalVisible(false);
                 navigation.navigate('AddDeliveryAddress');
-                // Linking.openURL(`tel: 8448613996`)
               }}
               style={{
                 marginBottom: 10,

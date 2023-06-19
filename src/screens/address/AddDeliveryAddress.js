@@ -6,6 +6,8 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect, createRef} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -13,9 +15,13 @@ import {RadioButton} from 'react-native-paper';
 import Toaster from '../../components/Toaster';
 import {GetApi, Post} from '../../helpers/Service';
 import Constants from '../../helpers/Constant';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Geocode from 'react-geocode';
 import Spinner from '../../components/Spinner';
 import {Colors, Fonts, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import CoustomDropdown from './CoustomDropdown';
+import axios from 'axios';
 
 const AddDeliveryAddress = props => {
   const navigation = useNavigation();
@@ -23,12 +29,105 @@ const AddDeliveryAddress = props => {
   const [phone, setPhone] = useState('');
   const [pincode, setPincode] = useState('');
   const [house_no, setHouseNo] = useState('');
-  const [area, setArea] = useState('');
+  const [area, setArea] = useState({
+    title: 'Select',
+    type: '',
+    location: '',
+  });
   const [landmark, setLandmark] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [address_type, setAddressType] = React.useState('Home');
   const [loading, setLoading] = useState(false);
+
+  const [findObj, setFindObj] = useState({
+    title: 'Select',
+    type: '',
+    location: '',
+  });
+
+  const [showList, setShowList] = useState(false);
+  const [prediction, setPredictions] = useState([]);
+  const [location, setLocation] = useState([]);
+
+  useEffect(() => {
+    const willFocusSubscription = props.navigation.addListener('focus', () => {
+      getLocation();
+      setArea({...area, title: 'Select'});
+    });
+    return () => {
+      willFocusSubscription;
+    };
+  }, []);
+
+  const getLocation = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      console.log(PermissionsAndroid.RESULTS.GRANTED, granted);
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the location');
+      } else {
+        console.log('location permission denied');
+        // alert("Location permission denied");
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const GOOGLE_PACES_API_BASE_URL =
+    'https://maps.googleapis.com/maps/api/place';
+
+  const GooglePlacesInput = async text => {
+    const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/autocomplete/json?key=AIzaSyDkAmiEffMR4r0r9zziv66pyEGNJSSnGN0&input=${text}`;
+    try {
+      let check = true;
+      if (Platform.OS === 'android') {
+        check = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+      }
+
+      if (check) {
+        setShowList(true);
+        const result = await axios.request({
+          method: 'post',
+          url: apiUrl,
+        });
+        if (result) {
+          const {
+            data: {predictions},
+          } = result;
+          setPredictions(predictions);
+          setShowList(true);
+        }
+      } else {
+        getLocation();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const checkLocation = async add => {
+    try {
+      Geocode.setApiKey('AIzaSyDkAmiEffMR4r0r9zziv66pyEGNJSSnGN0');
+      if (add) {
+        Geocode.fromAddress(add).then(
+          response => {
+            setLocation(response.results[0].geometry.location);
+          },
+          error => {
+            console.error(error);
+          },
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const submit = () => {
     setLoading(true);
@@ -37,7 +136,7 @@ const AddDeliveryAddress = props => {
     formData.append('phone', phone);
     formData.append('pincode', pincode);
     formData.append('house_no', house_no);
-    formData.append('area', area);
+    formData.append('area', area.location);
     formData.append('landmark', landmark);
     formData.append('city', city);
     formData.append('state', state);
@@ -45,6 +144,7 @@ const AddDeliveryAddress = props => {
     Post(Constants.post_address, formData).then(
       async res => {
         if (res.status === 200) {
+          console.log('okokok');
           //this.props.navigation.pop()
           Toaster('Successfully added address');
           props.navigation.push('BottomTabBar');
@@ -54,11 +154,12 @@ const AddDeliveryAddress = props => {
       },
       err => {
         setLoading(false);
-        console.log(err.response.data);
+        console.log('error aagya h ' + err.response.data);
       },
     );
   };
 
+  console.log(area);
   return (
     <View style={{backgroundColor: '#fff', height: '100%'}}>
       <Spinner color={'#fff'} visible={loading} />
@@ -125,9 +226,48 @@ const AddDeliveryAddress = props => {
           autoCapitalize="none"
           autoCorrect={false}
           style={styles.input}
-          value={area}
-          onChangeText={actualData => setArea(actualData)}
+          value={area.location}
+          // onChangeText={actualData => setArea(actualData)}
+          onChangeText={text => {
+            GooglePlacesInput(text);
+            setArea({...area, location: text});
+          }}
         />
+
+        {prediction != '' && showList && (
+          <View style={prediction && styles.list}>
+            {prediction.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  borderBottomWidth: 1,
+                  borderBottomColor: 'lightgrey',
+                  marginHorizontal: 20,
+                  paddingBottom: 5,
+                }}>
+                <Ionicons
+                  name="location"
+                  size={18}
+                  color="#1D1D1D"
+                  style={{marginHorizontal: 5}}
+                />
+                <Text
+                  style={{color: 'black'}}
+                  onPress={() => {
+                    console.log(item);
+                    checkLocation(item.description);
+                    setShowList(false);
+                    setArea({...area, location: item.description});
+                  }}>
+                  {item.description}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
         <Text style={styles.labelStyle}>Landmark</Text>
         <TextInput
           autoCapitalize="none"
