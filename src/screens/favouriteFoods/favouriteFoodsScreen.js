@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {Colors, Fonts, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -84,8 +85,6 @@ const FavouriteFoods = ({}) => {
   const favouriteTabHandler = async () => {
     const user = await AsyncStorage.getItem('userDetail');
     let userDetail = JSON.parse(user);
-    console.log(`Bearer ${userDetail?.access_token}`);
-
     return axios
       .get(Constants.baseUrl + 'customer/favourite-tab', {
         headers: {
@@ -94,7 +93,7 @@ const FavouriteFoods = ({}) => {
         },
       })
       .then(res => {
-        console.log('response', res.data);
+        console.log('favourite food list', res.data.data.FavouriteFood);
         setFavouriteFoods(res?.data?.data?.FavouriteFood);
       })
       .catch(err => {
@@ -105,8 +104,6 @@ const FavouriteFoods = ({}) => {
   useEffect(() => {
     favouriteTabHandler();
   }, []);
-
-  console.log('yoos' + JSON.stringify(favouriteFoods));
 
   const renderItem = data => (
     <TouchableHighlight
@@ -151,11 +148,11 @@ const FavouriteFoods = ({}) => {
                   marginLeft: Sizes.fixPadding - 8.0,
                   ...Fonts.grayColor14Medium,
                 }}>
-                {/* {data.item.rating.toFixed(1)} */}
+                {data.item.rating.toFixed(1)}
               </Text>
             </View>
             <Text style={{...Fonts.primaryColor20MediumBold}}>
-              {/* ${data.item.amount.toFixed(1)} */}
+              ${data.item.amount.toFixed(1)}
             </Text>
           </View>
         </View>
@@ -212,7 +209,82 @@ const FavouriteFoods = ({}) => {
           </Text>
         </View>
       ) : (
-        <View style={{flex: 1}}>
+        <ScrollView
+          style={{flex: 1}}
+          contentContainerStyle={{paddingVertical: 20}}>
+          {favouriteFoods.map(data => {
+            return (
+              <TouchableHighlight
+                style={{backgroundColor: Colors.bodyBackColor}}
+                activeOpacity={0.9}>
+                <View style={styles.orderWrapStyle}>
+                  <Image
+                    source={{uri: data.food.image}}
+                    style={styles.restaurantImageStyle}
+                  />
+                  <View
+                    style={{
+                      marginHorizontal: Sizes.fixPadding,
+                      flex: 1,
+                      paddingVertical: Sizes.fixPadding,
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        maxWidth: width / 1.8,
+                        ...Fonts.blackColor16Medium,
+                      }}>
+                      {data.food.name}
+                    </Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <MaterialIcons
+                        name="home"
+                        color={Colors.grayColor}
+                        size={20}
+                      />
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          maxWidth: width / 1.8,
+                          marginLeft: Sizes.fixPadding - 8.0,
+                          ...Fonts.grayColor14Medium,
+                        }}>
+                        {data.restaurant.name}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <MaterialIcons
+                          name="star"
+                          color={Colors.ratingColor}
+                          size={20}
+                        />
+                        <Text
+                          style={{
+                            marginLeft: Sizes.fixPadding - 8.0,
+                            ...Fonts.grayColor14Medium,
+                          }}>
+                          {data.restaurant.rating === null
+                            ? 4.3
+                            : data.restaurant.rating}
+                        </Text>
+                      </View>
+                      <Text style={{...Fonts.darkPrimaryColor15Medium}}>
+                        ${data.food.price}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableHighlight>
+            );
+          })}
           {/* <SwipeListView
             data={favouriteFoods}
             renderItem={renderItem}
@@ -224,7 +296,7 @@ const FavouriteFoods = ({}) => {
             }}
             showsVerticalScrollIndicator={false}
           /> */}
-        </View>
+        </ScrollView>
       )}
       <Snackbar
         style={styles.snackBarStyle}
@@ -245,8 +317,8 @@ const styles = StyleSheet.create({
     marginBottom: Sizes.fixPadding,
   },
   restaurantImageStyle: {
-    width: 90.0,
-    height: 100.0,
+    width: 90,
+    height: 100,
     borderTopLeftRadius: Sizes.fixPadding - 5.0,
     borderBottomLeftRadius: Sizes.fixPadding - 5.0,
   },

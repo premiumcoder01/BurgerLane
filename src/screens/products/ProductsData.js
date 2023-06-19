@@ -72,6 +72,7 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
           res?.data?.product_details.map(item => {
             item.qty = 1;
           });
+          console.log('responces from restaurant', res?.data);
           setProductDetailsAddOns(res.data?.product_details);
           setProductAddOnId(null);
           setProductAddOnIdArray([]);
@@ -212,6 +213,7 @@ const ProductsData = ({popularItemList, productList, restroId}) => {
         paddingVertical: 20,
       }}>
       <Spinner color={'#fff'} visible={loading} />
+
       {/* popular item */}
       <View style={{marginHorizontal: 20}}>
         <Text style={{...Fonts.blackColor19Medium}}>Popular Items</Text>

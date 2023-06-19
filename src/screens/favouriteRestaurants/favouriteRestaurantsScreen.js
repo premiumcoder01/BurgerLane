@@ -16,7 +16,7 @@ import {Snackbar} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from '../../helpers/Constant';
 import axios from 'axios';
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 
 const {width} = Dimensions.get('screen');
 
@@ -85,21 +85,17 @@ const FavouriteRestaurants = ({props}) => {
   };
 
   const favouriteTabHandler = async () => {
-
     const user = await AsyncStorage.getItem('userDetail');
     let userDetail = JSON.parse(user);
-    console.log(`Bearer ${userDetail?.access_token}`);
-
     return axios
-      .get(Constants.baseUrl + "customer/favourite-tab", {
+      .get(Constants.baseUrl + 'customer/favourite-tab', {
         headers: {
-        //   Authorization: `Bearer ${userDetail?.access_token || ''}`,
-        Authorization:  'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5N2FmZjU1OC0xYmFlLTRmNDEtYWMwMi1lNTMwNDlhOTQ0MjIiLCJqdGkiOiJkNzQ2MjlkNTUwYTgyZDI5MWFiNzE4NDg1ZDdhZDRhNzBlMmNkNTE0YTQyZjE5ZTk5Nzc3YmE3YmUyMmY1YjY3YTA5Y2IwZmQwNGYwMjdkNCIsImlhdCI6MTY2NzgyNjUxOS4zMzI3NzIsIm5iZiI6MTY2NzgyNjUxOS4zMzI3NzYsImV4cCI6MTY5OTM2MjUxOS4zMjc4NjYsInN1YiI6IjM3Iiwic2NvcGVzIjpbXX0.Y3jNF3F0zJJZGOit_8miPm_-pQfO067w_PGhmhYCa8zQKze8yqqfIEbcabY79wQANV5VtzvxXtXCX7GtNnMJCE0H-JHTsTijjxXI53dHpvRgSrak4DKh-QX2b6meQuljztOynpSCC940EWIGPjGL8M245vgD7_S-AB5Knn2S9czCXgC17Qpb6KLixVN9WLFUl09UoFsGlWakeXnIStrrfM31ycGKWhITwA1CNZKTTP-DpYu0vBS-GK7SMfpvhN_VPlvswlJKr1pK-9hp7XDxeQZPo14-azCYY_C74E16BCZYbuwQs_eb0Uf4d_YAEL8HmOfr69qMGgtaNi4J96gpIpeMsW5W_iaIU5F7anI_RbNexE7K0dG9ooA60O0aw0ywC3LQGGV0aDCDaWIZ38j11y8UoIHerAqwXXLCQ3gcmxW2fArybHMAriiLn9HQuDpPyvdlCq4w83bJgRF6VqaG4Zk4JlAVOOaQmS5hkajd163X_eukAXKlh07tSatDUUv85T6E7xQaGSdmxkSyMNrSnx83L3uMb89tHMRd7dBOr-pSnJxpObjLVJ4ZXitFwN8qPbt8sxT6k9GOKC1lzH4r57Dc-IULYeZHgK8XfOQ5RdV8mMj1NMYyJFqQaJAhlM_zjafQbkpH558vTmpqGexVjt_ndNXlZkwI-6Z_0jHkvf0',
+          Authorization: `Bearer ${userDetail?.access_token || ''}`,
           'Content-Type': 'multipart/form-data',
         },
       })
       .then(res => {
-        console.log('response', res.data);
+        console.log('favourite restaurant list', res.data);
         setFavouriteRestaurants(res?.data?.data?.FavouriteRestaurant);
       })
       .catch(err => {
@@ -107,9 +103,9 @@ const FavouriteRestaurants = ({props}) => {
       });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     favouriteTabHandler();
-  }, [])
+  }, []);
 
   const renderItem = data => (
     <TouchableHighlight
@@ -117,7 +113,10 @@ const FavouriteRestaurants = ({props}) => {
       activeOpacity={0.9}>
       <View style={styles.restaurantWrapStyle}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image source={{uri: data?.item?.favourite_restaurant?.image}} style={styles.restaurantImageStyle} />
+          <Image
+            source={{uri: data?.item?.favourite_restaurant?.image}}
+            style={styles.restaurantImageStyle}
+          />
           <View
             style={{
               width: width / 2.0,
@@ -135,7 +134,7 @@ const FavouriteRestaurants = ({props}) => {
                 color={Colors.grayColor}
               />
               <Text numberOfLines={1} style={{...Fonts.grayColor14Medium}}>
-              {data?.item?.favourite_restaurant?.address}
+                {data?.item?.favourite_restaurant?.address}
               </Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -145,7 +144,7 @@ const FavouriteRestaurants = ({props}) => {
                   marginLeft: Sizes.fixPadding - 8.0,
                   ...Fonts.grayColor14Medium,
                 }}>
-                  {data?.item?.favourite_restaurant?.rating}
+                {data?.item?.favourite_restaurant?.rating}
               </Text>
             </View>
           </View>
@@ -157,7 +156,7 @@ const FavouriteRestaurants = ({props}) => {
             alignSelf: 'flex-end',
             ...Fonts.grayColor14Medium,
           }}>
-         10 km
+          10 km
         </Text>
       </View>
     </TouchableHighlight>

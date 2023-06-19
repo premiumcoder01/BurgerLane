@@ -16,7 +16,7 @@ const HistoryOrders = ({ props }) => {
         Post(Constants.onGoingOrders).then(
           async res => {
             if (res.status === 200) {
-              console.log("responstes" + JSON.stringify(res?.data?.orders));
+              console.log("order hsitory" + JSON.stringify(res?.data?.orders));
               setHistoryList(res?.data?.orders?.history);
 
             } else {

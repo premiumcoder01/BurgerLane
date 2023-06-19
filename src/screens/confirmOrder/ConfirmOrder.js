@@ -157,7 +157,11 @@ const ConfirmOrder = () => {
                 marginVertical: Sizes.fixPadding,
                 justifyContent: 'space-between',
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
                 <MaterialIcons
                   name="location-on"
                   color={Colors.blackColor}
@@ -170,7 +174,7 @@ const ConfirmOrder = () => {
                     marginLeft: Sizes.fixPadding - 2.0,
                     ...Fonts.blackColor14Regular,
                   }}>
-                  {address?.house_no}, {address?.area}
+                  {address?.house_no}
                 </Text>
               </View>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>

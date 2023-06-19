@@ -1,5 +1,6 @@
-import {ScrollView, StyleSheet, Text, View, Image, Alert, Linking} from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import {ScrollView, StyleSheet, Text, View, Image} from 'react-native';
+import React, {useEffect} from 'react';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Dimensions} from 'react-native';
 import {Colors, Fonts, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -14,11 +15,11 @@ import Geolocation from '@react-native-community/geolocation';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation} from '@react-navigation/native';
 import {FlatList} from 'react-native';
-import {BottomSheet} from 'react-native-elements';
 import Modal from 'react-native-modal';
-import CustomSheet from '../../helpers/CustomSheet';
 
 const {width} = Dimensions.get('screen');
+
+const allItems = [];
 
 const Discover = () => {
   const navigation = useNavigation();
@@ -33,7 +34,15 @@ const Discover = () => {
   const [categoryList, setCategoryList] = useState([]);
   const [userAddressesList, setUserAddressesList] = useState([]);
 
+  const [productDetailsAddOns, setProductDetailsAddOns] = useState([]);
+  const [productAddOnId, setProductAddOnId] = useState(null);
+  const [productAddOnIdArray, setProductAddOnIdArray] = useState([]);
+  const [addOnPrice, setAddOnPrice] = useState(0);
+  const [qty, setQty] = useState(0);
+
   const [isModalVisible, setModalVisible] = useState(false);
+
+  const [isCartModal, setIsCartModal] = useState(false);
 
   const getLatLong = async () => {
     return new Promise((resolve, reject) => {
@@ -45,6 +54,10 @@ const Discover = () => {
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+
+  const toggleCartModal = () => {
+    setIsCartModal(!isCartModal);
   };
 
   const Home = async () => {
@@ -62,6 +75,7 @@ const Discover = () => {
     setLoading(true);
     Post(Constants.home, formData).then(async res => {
       if (res.status === 200) {
+        console.log('all items', res?.data?.item_list?.data);
         setItemList(res?.data?.item_list?.data);
         setCurrentAddress(res?.data?.current_location);
         setCategoryList(res?.data?.categories?.data);
@@ -70,6 +84,8 @@ const Discover = () => {
       }
     });
   };
+
+  console.log(latitude, longitute);
 
   const OfferList = () => {
     Post(Constants.offerList).then(
@@ -116,6 +132,7 @@ const Discover = () => {
     setLoading(true);
     Post(Constants.set_default_address, formData).then(async res => {
       if (res.status === 200) {
+        console.log('new address', res);
         setCurrentAddress(res?.data?.city);
         setModalVisible(false);
         setLoading(false);
@@ -128,9 +145,31 @@ const Discover = () => {
     OfferList();
   }, []);
 
+  const handlePopularItemsUpdate = ({id, restaurant_id}) => {
+    const newList = itemList.map(item => {
+      if (item.id === id) {
+        const formData = new FormData();
+        formData.append('item_id', id);
+        formData.append('restaurant_id', restaurant_id);
+        Post(Constants.favouriteFood, formData).then(
+          async res => {
+            if (res.status === 200) {
+              const updatedItem = {...item, isFavourite: !item.isFavourite};
+              return updatedItem;
+            }
+          },
+          err => {
+            console.log(err.response.data);
+          },
+        );
+      }
+    });
+    return newList;
+  };
+
   const addresses = () => {
     return (
-      <ScrollView showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {userAddressesList.map(item => (
           <TouchableOpacity
             onPress={() => setDeafultAddress(item.id)}
@@ -140,6 +179,7 @@ const Discover = () => {
                 padding: Sizes.fixPadding,
                 flexDirection: 'row',
                 alignItems: 'flex-start',
+                width: width / 1.1,
               }}>
               <MaterialIcons
                 name="location-on"
@@ -178,7 +218,7 @@ const Discover = () => {
                         addressId: item.id,
                       });
                     }}
-                    style={{marginRight: 20}}>
+                    style={{marginRight: 10}}>
                     <FontAwesome5
                       name="edit"
                       size={15}
@@ -200,6 +240,146 @@ const Discover = () => {
       </ScrollView>
     );
   };
+
+  const addItem = item => {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('item_id', item?.id);
+    Post(Constants.productDetails, formData).then(
+      async res => {
+        setLoading(false);
+        if (res.Status === 200) {
+          res?.data?.product_details.map(item => {
+            item.qty = 1;
+          });
+          console.log('responces on main screen', res.data);
+          setProductDetailsAddOns(res.data?.product_details);
+          setProductAddOnId(null);
+          setProductAddOnIdArray([]);
+          setAddOnPrice(0);
+          setQty(res?.data?.product_details[0].qty);
+          setIsCartModal(true);
+        }
+      },
+      err => {
+        console.log(err.response.data);
+      },
+    );
+  };
+
+  const addToCart = () => {
+    const formData = new FormData();
+    formData.append('item_id', productDetailsAddOns[0]?.id);
+    formData.append('restaurant_id', productDetailsAddOns[0]?.restaurant_id);
+    formData.append('quantity', qty);
+    formData.append('add_on_item', JSON.stringify(productAddOnIdArray));
+    Post(Constants.addToCart, formData).then(
+      async res => {
+        if (res.Status === '200') {
+          console.log('confirm order');
+          setIsCartModal(false);
+          navigation.navigate('ConfirmOrder');
+        }
+      },
+      err => {
+        console.log(err.response.data);
+      },
+    );
+  };
+
+  function setAddOnDetail(index_value, item_id, price) {
+    if (allItems.includes(item_id)) {
+      setAddOnPrice(addOnPrice - price);
+      for (var i = allItems.length - 1; i >= 0; i--) {
+        if (allItems[i] === item_id) {
+          allItems.splice(i, 1);
+        }
+      }
+    } else {
+      setAddOnPrice(addOnPrice + price);
+      allItems.push(item_id);
+    }
+    setProductAddOnId(item_id);
+    setProductAddOnIdArray(allItems);
+  }
+
+  function productAddOnListArray(index_value, is_multiple) {
+    return is_multiple == 'true'
+      ? productDetailsAddOns[0]?.product_add_on[
+          index_value
+        ]?.product_add_on_option.map((item, index) => (
+          <View>
+            <View style={styles.sizesWrapStyle}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setAddOnDetail(index_value, item.id, parseInt(item.price));
+                  }}
+                  style={{
+                    ...styles.radioButtonStyle,
+                    backgroundColor: productAddOnIdArray.includes(item.id)
+                      ? Colors.primaryColor
+                      : Colors.whiteColor,
+                  }}>
+                  {productAddOnIdArray.includes(item.id) ? (
+                    <MaterialIcons
+                      name="done"
+                      size={18}
+                      color={Colors.whiteColor}
+                    />
+                  ) : null}
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    marginLeft: Sizes.fixPadding,
+                    ...Fonts.blackColor16Medium,
+                  }}>
+                  {item?.title}
+                </Text>
+              </View>
+              <Text style={{...Fonts.blackColor16Medium}}>$ {item?.price}</Text>
+            </View>
+          </View>
+        ))
+      : productDetailsAddOns[0]?.product_add_on[
+          index_value
+        ]?.product_add_on_option.map((item, index) => (
+          <View>
+            <View style={styles.sizesWrapStyle}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() => {
+                    setAddOnDetail(index_value, item.id, parseInt(item.price));
+                  }}
+                  style={{
+                    ...styles.radioButtonStyle,
+                    backgroundColor:
+                      productAddOnId == item.id
+                        ? Colors.primaryColor
+                        : Colors.whiteColor,
+                  }}>
+                  {productAddOnId == item.id ? (
+                    <MaterialIcons
+                      name="done"
+                      size={18}
+                      color={Colors.whiteColor}
+                    />
+                  ) : null}
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    marginLeft: Sizes.fixPadding,
+                    ...Fonts.blackColor16Medium,
+                  }}>
+                  {item?.title}
+                </Text>
+              </View>
+              <Text style={{...Fonts.blackColor16Medium}}>$ {item?.price}</Text>
+            </View>
+          </View>
+        ));
+  }
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: Colors.primaryColor}}>
@@ -279,7 +459,7 @@ const Discover = () => {
                 {offerList.map(item => {
                   return (
                     <TouchableOpacity
-                      style={{marginLeft: 25,marginRight:20}}
+                      style={{marginLeft: 25, marginRight: 20}}
                       onPress={() =>
                         navigation.navigate('OfferList', {id: item?.id})
                       }>
@@ -365,19 +545,41 @@ const Discover = () => {
                 renderItem={({item}) => {
                   return (
                     <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate('RestaurantDetail', {
-                          product_id: item.item_id,
-                          longitude: longitute,
-                          latitude: latitude,
-                          isSelected: 1,
-                        })
-                      }
+                      // onPress={() =>
+                      //   navigation.navigate('RestaurantDetail', {
+                      //     product_id: item.item_id,
+                      //     longitude: longitute,
+                      //     latitude: latitude,
+                      //     isSelected: 1,
+                      //   })
+                      // }
+
                       style={styles.allRestaurentsInfoWrapStyle}>
-                      <Image
-                        source={{uri: item?.image}}
-                        style={styles.allRestaurentImageStyle}
-                      />
+                      <View>
+                        <Image
+                          source={{uri: item?.image}}
+                          style={styles.allRestaurentImageStyle}
+                        />
+                        <TouchableOpacity
+                          onPress={() => {
+                            handlePopularItemsUpdate({
+                              id: item.id,
+                              restaurant_id: item.restaurant_id,
+                            });
+                          }}
+                          style={{position: 'absolute', right: 20, top: 10}}>
+                          <AntDesign
+                            name={item.isFavourite ? 'heart' : 'hearto'}
+                            size={22}
+                            color={
+                              item.isFavourite
+                                ? Colors.primaryColor
+                                : Colors.whiteColor
+                            }
+                          />
+                        </TouchableOpacity>
+                      </View>
+
                       <View
                         style={{
                           paddingHorizontal: Sizes.fixPadding - 5.0,
@@ -386,17 +588,42 @@ const Discover = () => {
                         }}>
                         <Text
                           numberOfLines={1}
-                          style={{...Fonts.blackColor15Medium}}>
+                          style={{
+                            ...Fonts.blackColor14Regular,
+                            fontWeight: 'bold',
+                          }}>
                           {item?.name}
                         </Text>
                         <Text
                           numberOfLines={1}
                           style={{
-                            marginTop: Sizes.fixPadding - 7.0,
+                            marginTop: Sizes.fixPadding,
                             ...Fonts.grayColor14Medium,
+                            fontWeight: 'bold',
                           }}>
                           Price : {item?.price}
                         </Text>
+                        <TouchableOpacity
+                          style={{
+                            padding: 5,
+                            backgroundColor: '#FCE0E5',
+                            // width: 100,
+                            borderRadius: 10,
+                            borderWidth: 1,
+                            borderColor: Colors.primaryColor,
+                            marginTop: 10,
+                          }}
+                          onPress={() => addItem(item)}>
+                          <Text
+                            style={{
+                              ...Fonts.primaryColor16Medium,
+                              textAlign: 'center',
+                              fontWeight: 'bold',
+                              textTransform: 'uppercase',
+                            }}>
+                            Add
+                          </Text>
+                        </TouchableOpacity>
                       </View>
                     </TouchableOpacity>
                   );
@@ -406,7 +633,7 @@ const Discover = () => {
           </View>
         </ScrollView>
       </View>
-
+      {/* address modal */}
       <Modal
         onBackdropPress={() => setModalVisible(false)}
         onBackButtonPress={() => setModalVisible(false)}
@@ -433,7 +660,7 @@ const Discover = () => {
                 // Linking.openURL(`tel: 8448613996`)
               }}
               style={{
-                margin: 20,
+                marginBottom: 10,
                 flexDirection: 'row',
                 justifyContent: 'center',
                 padding: 10,
@@ -453,6 +680,145 @@ const Discover = () => {
               </Text>
             </TouchableOpacity>
           </View>
+        </View>
+      </Modal>
+
+      {/* cart modal */}
+      <Modal
+        onBackdropPress={() => setIsCartModal(false)}
+        onBackButtonPress={() => setIsCartModal(false)}
+        isVisible={isCartModal}
+        swipeDirection="down"
+        onSwipeComplete={toggleCartModal}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
+        animationInTiming={600}
+        backdropOpacity={0.5}
+        animationOutTiming={600}
+        backdropTransitionInTiming={600}
+        backdropTransitionOutTiming={600}
+        style={styles.modal}>
+        <View
+          style={{
+            backgroundColor: '#fff',
+            borderTopRightRadius: 20,
+            borderTopLeftRadius: 20,
+            minHeight: 100,
+          }}>
+          <View
+            style={{
+              padding: 10,
+              backgroundColor: Colors.whiteColor,
+              borderTopRightRadius: 20,
+              borderTopLeftRadius: 20,
+              elevation: 5,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={{uri: productDetailsAddOns[0]?.image}}
+                  resizeMode="contain"
+                  style={{height: 60, width: 60, borderRadius: 10}}
+                />
+                <Text
+                  style={{
+                    ...Fonts.blackColor15Regular,
+                    marginLeft: 20,
+                    fontWeight: 'bold',
+                  }}>
+                  {productDetailsAddOns[0]?.name}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  padding: 10,
+                  backgroundColor: '#FCE0E5',
+                  borderRadius: 20,
+                  borderWidth: 1,
+                  borderColor: Colors.primaryColor,
+                }}>
+                <MaterialIcons
+                  name="remove"
+                  color={Colors.blackColor}
+                  size={18}
+                  onPress={() => {
+                    qty < 2 ? setIsCartModal(false) : setQty(qty - 1);
+                  }}
+                />
+                <Text
+                  style={{...Fonts.blackColor15Regular, marginHorizontal: 10}}>
+                  {qty}
+                </Text>
+                <MaterialIcons
+                  name="add"
+                  color={Colors.blackColor}
+                  size={18}
+                  onPress={() => setQty(qty + 1)}
+                />
+              </View>
+            </View>
+          </View>
+          {/* addon */}
+          {productDetailsAddOns[0]?.product_add_on.length !== 0 ? (
+            <View
+              style={{
+                margin: 10,
+                marginTop: 20,
+                padding: 10,
+                backgroundColor: Colors.whiteColor,
+                elevation: 3,
+                borderRadius: 10,
+              }}>
+              <Text style={{...Fonts.blackColor15Regular, fontWeight: 'bold'}}>
+                Add On
+              </Text>
+              {productDetailsAddOns[0]?.product_add_on.map((item, index) => {
+                return (
+                  <View style={{marginTop: 20}}>
+                    <Text
+                      style={{
+                        ...Fonts.blackColor14Regular,
+                        marginBottom: 10,
+                        fontWeight: 'bold',
+                      }}>
+                      {item.title}
+                    </Text>
+                    {/* Array code  */}
+                    {productAddOnListArray(index, item?.is_multiple)}
+                    {/* end array code  */}
+                  </View>
+                );
+              })}
+            </View>
+          ) : null}
+
+          <TouchableOpacity
+            style={{
+              padding: 10,
+              paddingVertical: 15,
+              backgroundColor: Colors.primaryColor,
+              borderRadius: 10,
+              margin: 10,
+            }}
+            onPress={() => {
+              addToCart();
+            }}>
+            <Text
+              style={{
+                ...Fonts.whiteColor16Regular,
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }}>
+              Add Items $ {productDetailsAddOns[0]?.price * qty + addOnPrice}
+            </Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </SafeAreaView>
@@ -476,11 +842,9 @@ const styles = StyleSheet.create({
   pageStyle: {
     flex: 1,
     backgroundColor: Colors.whiteColor,
-    // paddingHorizontal: 20,
     paddingVertical: 20,
     borderTopLeftRadius: Sizes.fixPadding * 2.0,
     borderTopRightRadius: Sizes.fixPadding * 2.0,
-    // paddingBottom: Sizes.fixPadding * 120,
   },
   offerBannersImageStyle: {
     width: width / 1.15,
@@ -489,7 +853,7 @@ const styles = StyleSheet.create({
     borderRadius: Sizes.fixPadding * 2,
   },
   allRestaurentsInfoWrapStyle: {
-    backgroundColor: Colors.whiteColor,
+    backgroundColor: Colors.bodyBackColor,
     borderRadius: Sizes.fixPadding - 5.0,
     width: 150,
     marginBottom: 20,
@@ -497,16 +861,17 @@ const styles = StyleSheet.create({
   },
   allRestaurentImageStyle: {
     height: 150,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
+    borderRadius: 100,
     borderTopLeftRadius: Sizes.fixPadding,
     borderTopRightRadius: Sizes.fixPadding,
   },
   addresslistStyle: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.bodyBackColor,
     borderRadius: Sizes.fixPadding,
     elevation: 4,
     marginBottom: 10,
-    marginHorizontal: Sizes.fixPadding + 20,
+    marginHorizontal: Sizes.fixPadding + 8,
   },
 
   modal: {
@@ -518,7 +883,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    minHeight: 400,
+    minHeight: 200,
   },
   barIcon: {
     width: 60,
@@ -527,5 +892,22 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     alignItems: 'center',
     alignSelf: 'center',
+  },
+
+  radioButtonStyle: {
+    width: 20.0,
+    height: 20.0,
+    borderRadius: 13.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: Colors.grayColor,
+    borderWidth: 1.0,
+  },
+
+  sizesWrapStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Sizes.fixPadding,
   },
 });
