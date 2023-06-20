@@ -23,6 +23,7 @@ const Constants = {
   saveHistory: 'customer/save-history',
   nearBy: 'customer/near-by',
   locationGet: 'customer/location-get',
+  categoryItem: "customer/item-by-category?",
   offerList: 'view-all/offer',
   post_address: 'customer/post-address',
   update_address: 'customer/update-address',
@@ -43,6 +44,7 @@ const Constants = {
   productDetails: 'customer/product-detail',
   addToCart: 'customer/add-to-cart',
   favouriteFood: 'customer/favourite-food',
+
 
   emailValidationRegx:
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,

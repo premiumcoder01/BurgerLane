@@ -10,12 +10,15 @@ import Spinner from '../../components/Spinner';
 import {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import Constants from '../../helpers/Constant';
-import {Post} from '../../helpers/Service';
+import {GetApi, Post} from '../../helpers/Service';
 import Geolocation from '@react-native-community/geolocation';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {FlatList} from 'react-native';
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import Toaster from '../../components/Toaster';
 
 const {width} = Dimensions.get('screen');
 
@@ -24,14 +27,11 @@ const allItems = [];
 const Discover = props => {
   const navigation = useNavigation();
 
-  const data = useRoute();
-  console.log('location mil gya', data);
+  const route = useRoute();
+  // console.log('++++++', route.params);
 
   const [loading, setLoading] = useState(false);
   const [currentAddress, setCurrentAddress] = useState('');
-
-  const [longitute, setLongitute] = useState('');
-  const [latitude, setLatitute] = useState('');
 
   const [offerList, setOfferList] = useState([]);
   const [itemList, setItemList] = useState([]);
@@ -67,15 +67,17 @@ const Discover = props => {
   const Home = async () => {
     let lat;
     let long;
+
     await getLatLong().then(res => {
       lat = res.latitude;
       long = res.longitude;
     });
+
     const formData = new FormData();
+
     formData.append('lat', lat);
     formData.append('long', long);
-    setLongitute(long);
-    setLatitute(lat);
+
     setLoading(true);
     Post(Constants.home, formData).then(async res => {
       if (res.status === 200) {
@@ -102,29 +104,20 @@ const Discover = props => {
   };
 
   const restaurantListCategory = async item => {
-    let lat;
-    let long;
-    await getLatLong().then(res => {
-      lat = res.latitude;
-      long = res.longitude;
+    const user = await AsyncStorage.getItem('userDetail');
+    let userDetail = JSON.parse(user);
+    const url = `https://burgerlane.isynbus.com/public/api/customer/item-by-category?category_id=${item.id}`;
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${userDetail?.access_token || ''}`,
+        'Content-Type': 'multipart/form-data',
+      },
     });
-
-    const formData = new FormData();
-    formData.append('category_id', item.id);
-    formData.append('latitude', lat);
-    formData.append('longitude', long);
-    Post(Constants.restaurantByCategory, formData).then(
-      async res => {
-        if (res.status === 200) {
-          navigation.navigate('CategoryList', {
-            item: res,
-          });
-        }
-      },
-      err => {
-        console.log(err.response.data);
-      },
-    );
+    if (response.status === 200) {
+      navigation.navigate('CategoryList', {
+        item: response.data.data.item_data.data,
+      });
+    }
   };
 
   const setDeafultAddress = id => {
@@ -257,12 +250,16 @@ const Discover = props => {
           res?.data?.product_details.map(item => {
             item.qty = 1;
           });
-          setProductDetailsAddOns(res.data?.product_details);
-          setProductAddOnId(null);
-          setProductAddOnIdArray([]);
-          setAddOnPrice(0);
-          setQty(res?.data?.product_details[0].qty);
-          setIsCartModal(true);
+          if (res.data?.product_details) {
+            setProductDetailsAddOns(res.data?.product_details);
+            setProductAddOnId(null);
+            setProductAddOnIdArray([]);
+            setAddOnPrice(0);
+            setQty(res?.data?.product_details[0].qty);
+            setIsCartModal(true);
+          } else {
+            Toaster('Product not available');
+          }
         }
       },
       err => {
@@ -548,15 +545,6 @@ const Discover = props => {
                 renderItem={({item}) => {
                   return (
                     <TouchableOpacity
-                      // onPress={() =>
-                      //   navigation.navigate('RestaurantDetail', {
-                      //     product_id: item.item_id,
-                      //     longitude: longitute,
-                      //     latitude: latitude,
-                      //     isSelected: 1,
-                      //   })
-                      // }
-
                       style={styles.allRestaurentsInfoWrapStyle}>
                       <View>
                         <Image

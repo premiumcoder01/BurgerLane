@@ -2,29 +2,27 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TextInput,
   ScrollView,
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import React, {useState, useEffect, createRef} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
 import {RadioButton} from 'react-native-paper';
 import Toaster from '../../components/Toaster';
-import {GetApi, Post} from '../../helpers/Service';
+import {Post} from '../../helpers/Service';
 import Constants from '../../helpers/Constant';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Geocode from 'react-geocode';
 import Spinner from '../../components/Spinner';
 import {Colors, Fonts, Sizes} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import CoustomDropdown from './CoustomDropdown';
 import axios from 'axios';
 
+const GOOGLE_PACES_API_BASE_URL = 'https://maps.googleapis.com/maps/api/place';
+
 const AddDeliveryAddress = props => {
-  const navigation = useNavigation();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [pincode, setPincode] = useState('');
@@ -39,13 +37,6 @@ const AddDeliveryAddress = props => {
   const [state, setState] = useState('');
   const [address_type, setAddressType] = React.useState('Home');
   const [loading, setLoading] = useState(false);
-
-  const [findObj, setFindObj] = useState({
-    title: 'Select',
-    type: '',
-    location: '',
-  });
-
   const [showList, setShowList] = useState(false);
   const [prediction, setPredictions] = useState([]);
   const [location, setLocation] = useState([]);
@@ -65,20 +56,15 @@ const AddDeliveryAddress = props => {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
-      console.log(PermissionsAndroid.RESULTS.GRANTED, granted);
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('You can use the location');
       } else {
         console.log('location permission denied');
-        // alert("Location permission denied");
       }
     } catch (err) {
       console.warn(err);
     }
   };
-
-  const GOOGLE_PACES_API_BASE_URL =
-    'https://maps.googleapis.com/maps/api/place';
 
   const GooglePlacesInput = async text => {
     const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/autocomplete/json?key=AIzaSyDkAmiEffMR4r0r9zziv66pyEGNJSSnGN0&input=${text}`;
@@ -117,6 +103,7 @@ const AddDeliveryAddress = props => {
       if (add) {
         Geocode.fromAddress(add).then(
           response => {
+            console.log(response.results[0].geometry.location);
             setLocation(response.results[0].geometry.location);
           },
           error => {
@@ -128,6 +115,8 @@ const AddDeliveryAddress = props => {
       console.log(error);
     }
   };
+
+
 
   const submit = () => {
     setLoading(true);
@@ -144,11 +133,8 @@ const AddDeliveryAddress = props => {
     Post(Constants.post_address, formData).then(
       async res => {
         if (res.status === 200) {
-          console.log('okokok');
-          //this.props.navigation.pop()
           Toaster('Successfully added address');
-          props.navigation.push('BottomTabBar');
-          //this.setState({ offerList: res?.data?.restaurant });
+          props.navigation.push('Discover', {location: location});
         }
         setLoading(false);
       },
@@ -159,7 +145,6 @@ const AddDeliveryAddress = props => {
     );
   };
 
-  console.log(area);
   return (
     <View style={{backgroundColor: '#fff', height: '100%'}}>
       <Spinner color={'#fff'} visible={loading} />

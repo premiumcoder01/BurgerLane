@@ -13,6 +13,7 @@
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.7",
     "@react-native-async-storage/async-storage": "^1.17.10",
+    "@react-native-clipboard/clipboard": "^1.11.2",
     "@react-native-community/geolocation": "^3.0.6",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^16.4.5",
@@ -41,6 +42,7 @@
     "react-native-modal": "^13.0.1",
     "react-native-modalize": "^2.1.1",
     "react-native-onboarding-swiper": "^1.2.0",
+    "react-native-otp-inputs": "^7.4.0",
     "react-native-pager-view": "^6.0.0",
     "react-native-paper": "^4.12.4",
     "react-native-reanimated": "^2.12.0",

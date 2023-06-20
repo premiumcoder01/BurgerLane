@@ -41,6 +41,7 @@ import Language from '../screens/Language/Language';
 import BottomTab from '../components/BottomTab';
 import RestaurantDetail from '../screens/restaurantDetail/RestaurantDetail';
 import ConfirmOrder from '../screens/confirmOrder/ConfirmOrder';
+import Discover from '../screens/discover/Discover';
 
 const Stack = createNativeStackNavigator();
 const Navigation = () => {
@@ -155,7 +156,7 @@ const Navigation = () => {
       <Stack.Screen
         options={{headerShown: false}}
         name="Discover"
-        component={DiscoverScreen}
+        component={Discover}
       />
       <Stack.Screen
         name="NearBy"
