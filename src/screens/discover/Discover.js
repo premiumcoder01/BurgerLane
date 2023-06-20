@@ -104,6 +104,7 @@ const Discover = props => {
   };
 
   const restaurantListCategory = async item => {
+    setLoading(true);
     const user = await AsyncStorage.getItem('userDetail');
     let userDetail = JSON.parse(user);
     const url = `https://burgerlane.isynbus.com/public/api/customer/item-by-category?category_id=${item.id}`;
@@ -114,6 +115,7 @@ const Discover = props => {
       },
     });
     if (response.status === 200) {
+      setLoading(false);
       navigation.navigate('CategoryList', {
         item: response.data.data.item_data.data,
       });
@@ -240,22 +242,20 @@ const Discover = props => {
   };
 
   const addItem = item => {
+    console.log(item.id);
     setLoading(true);
     const formData = new FormData();
-    formData.append('item_id', item?.id);
+    formData.append('item_id', item?.item_id);
     Post(Constants.productDetails, formData).then(
       async res => {
         setLoading(false);
         if (res.Status === 200) {
-          res?.data?.product_details.map(item => {
-            item.qty = 1;
-          });
           if (res.data?.product_details) {
             setProductDetailsAddOns(res.data?.product_details);
             setProductAddOnId(null);
             setProductAddOnIdArray([]);
             setAddOnPrice(0);
-            setQty(res?.data?.product_details[0].qty);
+            setQty(1);
             setIsCartModal(true);
           } else {
             Toaster('Product not available');
@@ -723,6 +723,7 @@ const Discover = props => {
                     ...Fonts.blackColor15Regular,
                     marginLeft: 20,
                     fontWeight: 'bold',
+                    width: 150,
                   }}>
                   {productDetailsAddOns[0]?.name}
                 </Text>

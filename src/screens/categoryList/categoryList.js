@@ -65,19 +65,16 @@ const CategoryList = item => {
   const addItem = item => {
     setLoading(true);
     const formData = new FormData();
-    formData.append('item_id', item?.id);
+    formData.append('item_id', item?.item_id);
     Post(Constants.productDetails, formData).then(
       async res => {
         setLoading(false);
         if (res.Status === 200) {
-          res?.data?.product_details.map(item => {
-            item.qty = 1;
-          });
           setProductDetailsAddOns(res.data?.product_details);
           setProductAddOnId(null);
           setProductAddOnIdArray([]);
           setAddOnPrice(0);
-          setQty(res?.data?.product_details[0].qty);
+          setQty(1);
           setModalVisible(true);
         }
       },
